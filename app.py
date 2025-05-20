@@ -34,14 +34,14 @@ ui.page_opts(title="영천시 축제 대시보드", fillable=False)
 with ui.nav_panel("Overview"):
     # ▶ 위쪽: 표 1, 2
     with ui.layout_columns(col_widths=(6, 6)):
-        with ui.card():
-            ui.h4("1. 기본 정보 요약표")
+        with ui.card(style="box-shadow: 2px 2px 8px rgba(0,0,0,0.1); border-radius: 10px;"):
+            ui.h4("1. 축제별 규모와 개최 정보 한눈에 보기", style="background-color: #fff3e0; color: #ef6c00; padding: 0.5rem 1rem; border-radius: 8px;")
             @render.data_frame
             def info_table():
                 return df_info_display
             
         with ui.card():
-            ui.h4("2. 비교대상 선정 이유")
+            ui.h4("2. 영천 축제, 왜 이 축제와 비교할까?", style="background-color: #ffe4e6; color: #c2185b; padding: 0.5rem 1rem; border-radius: 6px;")
             @render.ui
             def compare_custom():
                 return ui.HTML("""
@@ -104,13 +104,13 @@ with ui.nav_panel("Overview"):
     # ▶ 아래쪽: 표 3, 그래프 4
     with ui.layout_columns(col_widths=(6, 6)):
         with ui.card():
-            ui.h4("3. 인프라 요약표")
+            ui.h4("3. 축제별 숙소·식당 인프라 현황", style="background-color: #e0f7fa; color: #00796b; padding: 0.5rem 1rem; border-radius: 6px;")
             @render.data_frame
             def infra_table():
                 return df_infra_summary
             
         with ui.card():
-            ui.h4("3-1. 인프라 막대그래프")
+            ui.h4("3-1. 업소 수 절대 비교: 어떤 축제가 가장 많을까?", style="background-color: #e0f7fa; color: #00796b; padding: 0.5rem 1rem; border-radius: 6px;")
             ui.input_radio_buttons(
                 id="infra_type",
                 label="업소 유형 선택",
@@ -252,14 +252,140 @@ with ui.nav_panel("Stats View"):
                 ui.h4("🅿️ 주차장 구분2 분포")
                 @render_plotly
                 def 주차장차트():
-                    df = df_stats[
-                        (df_stats["축제명"] == input.selected_festival()) &
-                        (df_stats["구분1"] == "주차장")
-                    ]
-                    count = df["구분2"].value_counts().reset_index()
-                    count.columns = ["구분2", "수"]
-                    return px.bar(count, x="구분2", y="수", title="주차장 세부유형") if not count.empty else px.bar(title="주차장 데이터 없음")
-
+                    # ✅ 주차장 데이터 필터링
+                    df_주차 = df_stats[df_stats["구분1"] == "주차장"].copy()
+                
+                    # ✅ 전체 축제명과 구분2 목록 추출
+                    축제_목록 = df_stats["축제명"].dropna().unique()
+                    구분2_목록 = df_주차["구분2"].dropna().unique()
+                
+                    # ✅ 모든 축제 × 구분2 조합 생성
+                    전체_조합 = pd.MultiIndex.from_product(
+                        [축제_목록, 구분2_목록],
+                        names=["축제명", "구분2"]
+                    ).to_frame(index=False)
+                
+                    # ✅ 실제 데이터 집계
+                    count = df_주차.groupby(["축제명", "구분2"]).size().reset_index(name="수")
+                
+                    # ✅ 누락된 조합에 대해 수 = 0 으로 채움
+                    merged = pd.merge(전체_조합, count, on=["축제명", "구분2"], how="left").fillna(0)
+                    merged["수"] = merged["수"].astype(int)
+                
+                    selected = input.selected_festival()
+                
+                    # ✅ 그래프 생성: 막대 위에 값 표시
+                    fig = px.bar(
+                        merged,
+                        x="구분2",
+                        y="수",
+                        color="축제명",
+                        barmode="group",
+                        text="수",  # 막대 위 숫자 표시
+                        title="🅿️ 주차장 세부유형 - 전체 축제 비교",
+                        labels={"구분2": "주차장 유형", "수": "개수"},
+                        height=400
+                    )
+                
+                    # ✅ 각 막대 위에 수치 표시 & 선택된 축제 강조
+                    for trace in fig.data:
+                        trace.textposition = "outside"
+                        trace.marker.opacity = 1.0 if trace.name == selected else 0.3
+                
+                    # ✅ x축 라벨 잘 보이게 설정
+                    fig.update_layout(
+                        legend_title_text="축제명",
+                        showlegend=True,
+                        xaxis=dict(
+                            tickangle=0,
+                            automargin=True,
+                            tickfont=dict(size=12),
+                            title="주차장 유형"
+                        ),
+                        margin=dict(b=80)  # 하단 여백 확보
+                    )
+                
+                    return fig
+                # ▶ 셔틀버스 운행 정보 표 (HTML 버전)
+        with ui.layout_columns(col_widths=(12,)):
+            with ui.card(full_screen=True):
+                ui.h4("🚌 3-3. 축제 셔틀버스 운행 정보")
+        
+                @render.ui
+                def shuttle_table():
+                    return ui.HTML("""
+                    <style>
+                        table.shuttle-table {
+                            width: 100%;
+                            border-collapse: collapse;
+                            font-size: 14px;
+                        }
+                        table.shuttle-table th, table.shuttle-table td {
+                            border: 1px solid #ddd;
+                            padding: 8px;
+                            text-align: center;
+                        }
+                        table.shuttle-table th {
+                            background-color: #f2f2f2;
+                        }
+                    </style>
+        
+                    <table class="shuttle-table">
+                        <thead>
+                            <tr>
+                                <th>축제명</th>
+                                <th>운행 유무</th>
+                                <th>경로</th>
+                                <th>운행 횟수</th>
+                                <th>운영 시간</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>영천 작약꽃축제</td>
+                                <td>있음</td>
+                                <td>버스터미널 → 영천역 → 영천시청 → 영천한의마을 등 순환</td>
+                                <td>약 15분 간격</td>
+                                <td>11:00 ~ 22:00</td>
+                            </tr>
+                            <tr>
+                                <td>별빛축제</td>
+                                <td>있음</td>
+                                <td>이천터미널 → 별빛정원우주</td>
+                                <td>1시간 간격</td>
+                                <td>16:30 ~ 19:30</td>
+                            </tr>
+                            <tr>
+                                <td>와인페스타</td>
+                                <td>있음</td>
+                                <td>제1주차장 앞 ↔ 행사장</td>
+                                <td>수시 운행</td>
+                                <td>행사 시간에 맞춰 운행</td>
+                            </tr>
+                            <tr>
+                                <td>고흥항공우주축제</td>
+                                <td>있음</td>
+                                <td>신금리 ↔ 우주과학관</td>
+                                <td>2대 순환 운행</td>
+                                <td>09:00 ~ 21:00</td>
+                            </tr>
+                            <tr>
+                                <td>옥정호 벚꽃축제</td>
+                                <td>있음</td>
+                                <td>쌍암리 주차장(운암초 근처) ↔ 축제 행사장</td>
+                                <td>수시 운행</td>
+                                <td>09:00 ~ 18:00</td>
+                            </tr>
+                            <tr>
+                                <td>문경 오미자축제</td>
+                                <td>있음</td>
+                                <td>문경오미자테마공원 ↔ 문경새재 2주차장</td>
+                                <td>수시 운행</td>
+                                <td>10:00 ~ 18:00</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    """)
 
 
 with ui.nav_panel("Insight View"):
