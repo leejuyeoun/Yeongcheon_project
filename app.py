@@ -4,14 +4,8 @@ import plotly.express as px
 import pathlib
 import pandas as pd
 
-# ✅ 경로 설정
-base_dir = pathlib.Path(__file__).parent
-
-# ✅ 데이터 불러오기
-df_info = pd.read_excel(base_dir / "축제정보.xlsx")
-df_compare = pd.read_excel(base_dir / "축제비교대상선정이유.xlsx")
-df_infra_summary = pd.read_excel(base_dir / "인프라요약_전처리결과.xlsx")
-df_bar_long = pd.read_excel(base_dir / "인프라그래프데이터_전처리결과.xlsx")
+# 데이터 로드
+from shared import df_info, df_compare, df_infra_summary, df_bar_long, df_infra_combined, df_stats, df_infra_merged
 
 # ✅ 표 1: 축제 기본정보
 df_info["일일 평균 방문객"] = (df_info["총방문객(명)"] / df_info["일수(일)"]).round(1)
@@ -91,7 +85,6 @@ with ui.nav_panel("Map View"):
 
 with ui.nav_panel("Stats View"):
     # ✅ 데이터 로딩
-    df_stats = pd.read_excel(base_dir / "영천시_숙소_식당_카페_주차장_분리.xlsx")
     축제_목록 = sorted(df_stats["축제명"].dropna().unique().tolist())
     숙소_세부 = sorted(df_stats[df_stats["구분1"] == "숙소"]["구분2"].dropna().unique().tolist())
     식당_세부 = sorted(df_stats[df_stats["구분1"] == "식당"]["구분2"].dropna().unique().tolist())
