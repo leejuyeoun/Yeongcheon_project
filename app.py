@@ -7,6 +7,17 @@ import pandas as pd
 # 데이터 로드
 from shared import df_info, df_compare, df_infra_summary, df_bar_long, df_infra_combined, df_stats, df_infra_merged
 
+# ✅ HTML 파일 매핑
+축제_파일_매핑 = {
+    "작약꽃축제": "작약꽃축제.html",
+    "와인페스타": "와인페스타.html",
+    "별빛축제": "별빛축제.html",
+    "벚꽃축제": "벚꽃축제.html",
+    "오미자축제": "오미자축제.html",
+    "우주항공축제": "우주항공축제.html"
+}
+
+
 # ✅ 표 1: 축제 기본정보
 df_info["일일 평균 방문객"] = (df_info["총방문객(명)"] / df_info["일수(일)"]).round(1)
 df_info_display = df_info[["축제명", "지역", "일수(일)", "총방문객(명)", "일일 평균 방문객", "개최시기(월)"]]
@@ -64,23 +75,23 @@ with ui.nav_panel("Overview"):
             
 
 with ui.nav_panel("Map View"):
+    ui.p("좌우 지도를 통해 서로 다른 축제를 선택하고 인프라(숙소, 식당, 카페 등)를 비교", style="font-size: 16px; color: #555;")
     with ui.layout_columns(col_widths=(6, 6)):
         with ui.card():
-            ui.h4("왼쪽 지도")
+            ui.h4("📍 왼쪽 지도 (선택한 축제의 인프라 위치)")
+            ui.input_select("left_festival", "🎯 왼쪽 지도: 축제를 선택하세요", list(축제_파일_매핑.keys()), selected="작약꽃축제")
             @render.ui
             def map_left():
-                return ui.HTML(
-                    '<iframe src="/영천시_축제_인프라.html" width="100%" height="600px" style="border:none;"></iframe>'
-                )
+                filename = 축제_파일_매핑[input.left_festival()]
+                return ui.HTML(f'<iframe src="/{filename}" width="100%" height="600px" style="border:none;"></iframe>')
+
         with ui.card():
-            ui.h4("오른쪽 지도")
+            ui.h4("📍 오른쪽 지도 (선택한 축제의 인프라 위치)")
+            ui.input_select("right_festival", "🎯 오른쪽 지도: 축제를 선택하세요", list(축제_파일_매핑.keys()), selected="와인페스타")
             @render.ui
             def map_right():
-                return ui.HTML(
-                    '<iframe src="/영천시_축제_인프라.html" width="100%" height="600px" style="border:none;"></iframe>'
-                )
-            
-
+                filename = 축제_파일_매핑[input.right_festival()]
+                return ui.HTML(f'<iframe src="/{filename}" width="100%" height="600px" style="border:none;"></iframe>')
 
 
 with ui.nav_panel("Stats View"):

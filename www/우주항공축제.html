@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+        <script>
+            L_NO_TOUCH = false;
+            L_DISABLE_3D = false;
+        </script>
+    
+    <style>html, body {width: 100%;height: 100%;margin: 0;padding: 0;}</style>
+    <style>#map {position:absolute;top:0;bottom:0;right:0;left:0;}</style>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.6.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_e43efb6d14779ee7daea65681287dcd3 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+            </style>
+        
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_e43efb6d14779ee7daea65681287dcd3" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_e43efb6d14779ee7daea65681287dcd3 = L.map(
+                "map_e43efb6d14779ee7daea65681287dcd3",
+                {
+                    center: [34.4535, 127.5178],
+                    crs: L.CRS.EPSG3857,
+                    zoom: 11,
+                    zoomControl: true,
+                    preferCanvas: false,
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_3c807438641ad42c31cdac5be51b4372 = L.tileLayer(
+                "https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png",
+                {"attribution": "\u0026copy; \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"http://cartodb.com/attributions\"\u003eCartoDB\u003c/a\u003e, CartoDB \u003ca href =\"http://cartodb.com/attributions\"\u003eattributions\u003c/a\u003e", "detectRetina": false, "maxNativeZoom": 18, "maxZoom": 18, "minZoom": 0, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+            ).addTo(map_e43efb6d14779ee7daea65681287dcd3);
+        
+    
+            var marker_a1e7b286261289002b7526c28cf0ae92 = L.marker(
+                [34.4535, 127.5178],
+                {}
+            ).addTo(map_e43efb6d14779ee7daea65681287dcd3);
+        
+    
+            var icon_d2cb5fcaab357d2a3af4f5c22f7c80ce = L.AwesomeMarkers.icon(
+                {"extraClasses": "fa-rotate-0", "icon": "info-sign", "iconColor": "white", "markerColor": "blue", "prefix": "glyphicon"}
+            );
+            marker_a1e7b286261289002b7526c28cf0ae92.setIcon(icon_d2cb5fcaab357d2a3af4f5c22f7c80ce);
+        
+    
+        var popup_cd772ba51f8f214c1f1d2a2ec5534794 = L.popup({"maxWidth": "100%"});
+
+        
+            var html_6d80f213b53b6296a6c3d8280b2c628d = $(`<div id="html_6d80f213b53b6296a6c3d8280b2c628d" style="width: 100.0%; height: 100.0%;"><b>우주항공축제</b><br>개최시기: 5월<br>일일 평균 방문객: 30,000명</div>`)[0];
+            popup_cd772ba51f8f214c1f1d2a2ec5534794.setContent(html_6d80f213b53b6296a6c3d8280b2c628d);
+        
+
+        marker_a1e7b286261289002b7526c28cf0ae92.bindPopup(popup_cd772ba51f8f214c1f1d2a2ec5534794)
+        ;
+
+        
+    
+    
+            var circle_e41a90b0aef902980d3b13a1a1bf36ac = L.circle(
+                [34.4535, 127.5178],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "blue", "fillOpacity": 0.05, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 10000, "stroke": true, "weight": 3}
+            ).addTo(map_e43efb6d14779ee7daea65681287dcd3);
+        
+    
+            var layer_control_7c8ce30b05341004abc735fb2fbc08da = {
+                base_layers : {
+                    "cartodbpositron" : tile_layer_3c807438641ad42c31cdac5be51b4372,
+                },
+                overlays :  {
+                },
+            };
+            L.control.layers(
+                layer_control_7c8ce30b05341004abc735fb2fbc08da.base_layers,
+                layer_control_7c8ce30b05341004abc735fb2fbc08da.overlays,
+                {"autoZIndex": true, "collapsed": false, "position": "topright"}
+            ).addTo(map_e43efb6d14779ee7daea65681287dcd3);
+        
+</script>
+</html>
