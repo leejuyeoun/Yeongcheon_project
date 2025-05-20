@@ -18,9 +18,13 @@ from shared import df_info, df_compare, df_infra_summary, df_bar_long, df_infra_
 }
 
 
-# ✅ 표 1: 축제 기본정보
+# ✅ 표 1: 축제 기본정보 (작약꽃축제 통합 버전)
 df_info["일일 평균 방문객"] = (df_info["총방문객(명)"] / df_info["일수(일)"]).round(1)
-df_info_display = df_info[["축제명", "지역", "일수(일)", "총방문객(명)", "일일 평균 방문객", "개최시기(월)"]]
+df_info_fixed = df_info.copy()
+df_info_fixed.loc[df_info_fixed["축제명"].isin(["작약꽃축제A", "작약꽃축제B", "작약꽃축제C"]), "축제명"] = "작약꽃축제(A/B/C)"
+df_info_display = df_info_fixed.drop_duplicates(subset="축제명")[
+    ["축제명", "지역", "일수(일)", "총방문객(명)", "일일 평균 방문객", "개최시기(월)"]
+].reset_index(drop=True)
 
 # ✅ 표 2: 비교대상 선정이유
 df_compare_display = df_compare.rename(columns={"비교이유": "비교 이유"})[["영천축제", "비교축제", "비교 이유"]]
@@ -78,7 +82,7 @@ with ui.nav_panel("Map View"):
     ui.p("좌우 지도를 통해 서로 다른 축제를 선택하고 인프라(숙소, 식당, 카페 등)를 비교", style="font-size: 16px; color: #555;")
     with ui.layout_columns(col_widths=(6, 6)):
         with ui.card():
-            ui.h4("📍 왼쪽 지도 (선택한 축제의 인프라 위치)")
+            ui.h4("📍 왼쪽 지도 (선택한 축제 위치)")
             ui.input_select("left_festival", "🎯 왼쪽 지도: 축제를 선택하세요", list(축제_파일_매핑.keys()), selected="작약꽃축제")
             @render.ui
             def map_left():
@@ -86,7 +90,7 @@ with ui.nav_panel("Map View"):
                 return ui.HTML(f'<iframe src="/{filename}" width="100%" height="600px" style="border:none;"></iframe>')
 
         with ui.card():
-            ui.h4("📍 오른쪽 지도 (선택한 축제의 인프라 위치)")
+            ui.h4("📍 오른쪽 지도 (선택한 축제 위치)")
             ui.input_select("right_festival", "🎯 오른쪽 지도: 축제를 선택하세요", list(축제_파일_매핑.keys()), selected="와인페스타")
             @render.ui
             def map_right():
