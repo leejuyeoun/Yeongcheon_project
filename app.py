@@ -14,7 +14,7 @@ from shared import df_info, df_compare, df_infra_summary, df_bar_long, df_infra_
     "별빛축제": "별빛축제.html",
     "벚꽃축제": "벚꽃축제.html",
     "오미자축제": "오미자축제.html",
-    "우주항공축제": "우주항공축제.html"
+    "우주항공축제": "우주항공축제_.html"
 }
 
 
@@ -35,13 +35,7 @@ with ui.nav_panel("Overview"):
     # ▶ 위쪽: 표 1, 2
     with ui.layout_columns(col_widths=(6, 6)):
         with ui.card(style="box-shadow: 2px 2px 8px rgba(0,0,0,0.1); border-radius: 10px;"):
-            ui.h4("1. 축제별 규모와 개최 정보 한눈에 보기", style="background-color: #fff3e0; color: #ef6c00; padding: 0.5rem 1rem; border-radius: 8px;")
-            @render.data_frame
-            def info_table():
-                return df_info_display
-            
-        with ui.card():
-            ui.h4("2. 영천 축제, 왜 이 축제와 비교할까?", style="background-color: #ffe4e6; color: #c2185b; padding: 0.5rem 1rem; border-radius: 6px;")
+            ui.h4("1. 영천 축제, 왜 이 축제와 비교할까?", style="background-color: #ffe4e6; color: #c2185b; padding: 0.5rem 1rem; border-radius: 6px;")
             @render.ui
             def compare_custom():
                 return ui.HTML("""
@@ -100,11 +94,19 @@ with ui.nav_panel("Overview"):
 
                 </div>
                 """)
+            
+        with ui.card():
+            ui.h4("2. 축제별 규모와 개최 정보 한눈에 보기", style="background-color: #fff3e0; color: #ef6c00; padding: 0.5rem 1rem; border-radius: 8px;")
+            @render.data_frame
+            def info_table():
+                return df_info_display
+           
+            
 
     # ▶ 아래쪽: 표 3, 그래프 4
     with ui.layout_columns(col_widths=(6, 6)):
         with ui.card():
-            ui.h4("3. 축제별 숙소·식당 인프라 현황", style="background-color: #e0f7fa; color: #00796b; padding: 0.5rem 1rem; border-radius: 6px;")
+            ui.h4("3. 축제별 숙소·식당·주차장 인프라 현황", style="background-color: #e0f7fa; color: #00796b; padding: 0.5rem 1rem; border-radius: 6px;")
             @render.data_frame
             def infra_table():
                 return df_infra_summary
@@ -118,9 +120,21 @@ with ui.nav_panel("Overview"):
                 selected="숙소",
                 inline=True
             )
+            # 와인페스타 포함 여부 체크박스
+            ui.input_checkbox(
+                id='include_wine',
+                label = "와인페스타 포함 여부",
+                value = True
+            )
+
             @render_plotly
             def infra_bar():
                 df_filtered = df_bar_long[df_bar_long["업소유형"] == input.infra_type()]
+
+                # 와인 페스타 필터링
+                if not input.include_wine() :
+                    df_filtered = df_filtered[df_filtered["축제명"] != "와인페스타"]
+
                 fig = px.bar(
                     df_filtered,
                     x="축제명",
@@ -157,7 +171,7 @@ with ui.nav_panel("Overview"):
                     </div>
 
                     <div style="background: #f9f9f9; border-left: 5px solid #f293a6; padding: 1rem; border-radius: 8px;">
-                        <strong>우주항공축제</strong> – 나로우주센터 중심, 숙박/음식점 부족, 교통 접근 어려움
+                        <strong>우주항공축제</strong> – 나로우주센터 중심, 주요 생활권에서 떨어진 지역이나 적정 수준의 인프라 갖춤
                     </div>
 
                     <div style="background: #f9f9f9; border-left: 5px solid #b1dbff; padding: 1rem; border-radius: 8px;">
@@ -207,13 +221,13 @@ with ui.nav_panel("Stats View"):
             )
             ui.input_checkbox_group(
                 id="숙소세부",
-                label="🏨 숙소 구분2",
+                label="🏨 숙소 유형 필터",
                 choices=숙소_세부,
                 selected=숙소_세부
             )
             ui.input_checkbox_group(
                 id="식당세부",
-                label="🍽️ 식당 구분2",
+                label="🍽️ 식당 유형 필터",
                 choices=식당_세부,
                 selected=식당_세부
             )
@@ -221,7 +235,7 @@ with ui.nav_panel("Stats View"):
         # ✅ 📊 그래프 3개 깔끔하게 정렬
         with ui.layout_columns(col_widths=(6, 6)):
             with ui.card():
-                ui.h4("🏨 숙소 구분2 분포")
+                ui.h4("🏨 숙소 유형 분포")
                 @render_plotly
                 def 숙소차트():
                     df = df_stats[
@@ -231,10 +245,20 @@ with ui.nav_panel("Stats View"):
                     ]
                     count = df["구분2"].value_counts().reset_index()
                     count.columns = ["구분2", "수"]
-                    return px.pie(count, names="구분2", values="수", title="숙소 세부유형") if not count.empty else px.pie(names=["없음"], values=[1], title="숙소 데이터 없음")
-
+                    
+                    fig =px.pie(
+                        count if not count.empty else pd.DataFrame({'구분2' : ["없음"], "수" : [1]}),
+                        names = "구분2",
+                        values = "수",
+                        title="어떤 유형의 숙소가 더 많을까?",
+                        hole=0.4,
+                        color_discrete_sequence=px.colors.qualitative.Pastel
+                    )
+                    fig.update_traces(textinfo = "percent+label", textposition = 'outside', textfont_size = 15)
+                    return fig
+                
             with ui.card():
-                ui.h4("🍽️ 식당 구분2 분포")
+                ui.h4("🍽️ 식당 종류 분포")
                 @render_plotly
                 def 식당차트():
                     df = df_stats[
@@ -244,12 +268,26 @@ with ui.nav_panel("Stats View"):
                     ]
                     count = df["구분2"].value_counts().reset_index()
                     count.columns = ["구분2", "수"]
-                    return px.pie(count, names="구분2", values="수", title="식당 세부유형") if not count.empty else px.pie(names=["없음"], values=[1], title="식당 데이터 없음")
+                    
+                    selected = input.selected_festival()
+                    text_size = 13 if selected == "와인페스타" else 15
+                    
+                    fig = px.pie(
+                        count if not count.empty else pd.DataFrame({"구분2":["없음"], "수":[1]}),
+                        names = "구분2",
+                        values = "수",
+                        title="어떤 종류의 식당이 더 많을까?",
+                        hole = 0.4,
+                        color_discrete_sequence=px.colors.qualitative.Pastel
+                    )
+                    fig.update_traces(textinfo = "percent+label", textposition = 'outside', textfont_size = text_size)
+                    return fig
+
 
         with ui.layout_columns(col_widths=(6, 6)):
             # 카페 차트는 제거됨
             with ui.card():
-                ui.h4("🅿️ 주차장 구분2 분포")
+                ui.h4("🅿️ 공영주차장 수")
                 @render_plotly
                 def 주차장차트():
                     # ✅ 주차장 데이터 필터링
@@ -282,20 +320,22 @@ with ui.nav_panel("Stats View"):
                         color="축제명",
                         barmode="group",
                         text="수",  # 막대 위 숫자 표시
-                        title="🅿️ 주차장 세부유형 - 전체 축제 비교",
+                        title="공영주차장 수 - 전체 축제 비교(축제위치 반경 1km이내 기준)",
                         labels={"구분2": "주차장 유형", "수": "개수"},
-                        height=400
+                        height=450,
+                        color_discrete_sequence = px.colors.qualitative.Pastel
                     )
                 
                     # ✅ 각 막대 위에 수치 표시 & 선택된 축제 강조
                     for trace in fig.data:
                         trace.textposition = "outside"
-                        trace.marker.opacity = 1.0 if trace.name == selected else 0.3
+                        trace.marker.opacity = 1.0 if trace.name == selected else 0.2
                 
                     # ✅ x축 라벨 잘 보이게 설정
                     fig.update_layout(
                         legend_title_text="축제명",
                         showlegend=True,
+                        yaxis=dict(tick0=0, dtick=10),
                         xaxis=dict(
                             tickangle=0,
                             automargin=True,
@@ -306,10 +346,11 @@ with ui.nav_panel("Stats View"):
                     )
                 
                     return fig
+                
                 # ▶ 셔틀버스 운행 정보 표 (HTML 버전)
         with ui.layout_columns(col_widths=(12,)):
             with ui.card(full_screen=True):
-                ui.h4("🚌 3-3. 축제 셔틀버스 운행 정보")
+                ui.h4("🚌축제 셔틀버스 운행 정보")
         
                 @render.ui
                 def shuttle_table():
