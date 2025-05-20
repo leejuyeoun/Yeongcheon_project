@@ -26,8 +26,6 @@ df_info_display = df_info_fixed.drop_duplicates(subset="축제명")[
     ["축제명", "지역", "일수(일)", "총방문객(명)", "일일 평균 방문객", "개최시기(월)"]
 ].reset_index(drop=True)
 
-# ✅ 표 2: 비교대상 선정이유
-df_compare_display = df_compare.rename(columns={"비교이유": "비교 이유"})[["영천축제", "비교축제", "비교 이유"]]
 
 # ✅ Overview 탭 UI 구성
 ui.page_opts(title="영천시 축제 대시보드", fillable=True)
@@ -43,9 +41,65 @@ with ui.nav_panel("Overview"):
                 return df_info_display
         with ui.card(full_screen=True):
             ui.h4("2. 비교대상 선정 이유")
-            @render.data_frame
-            def compare_table():
-                return df_compare_display
+            @render.ui
+            def compare_custom():
+                return ui.HTML("""
+                <div style="display: flex; flex-direction: column; gap: 2rem; font-family: sans-serif; font-size: 14px;">
+
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div style="flex: 1; background: #f2f2f2; padding: 1rem; border-radius: 10px;">
+                            <strong>작약꽃축제</strong><br>
+                            일일 평균 방문객: 7,142.9명
+                        </div>
+                        <div style="font-size: 20px; color: #999;">→</div>
+                        <div style="flex: 1; background: #e6f4ea; padding: 1rem; border-radius: 10px; border-left: 4px solid #67c587;">
+                            <strong>🌿 자연 경관(봄꽃) 테마</strong><br>
+                            자연을 무대로 한 계절성 축제로 경관 감상 중심으로 구성
+                        </div>
+                        <div style="font-size: 20px; color: #999;">→</div>
+                        <div style="flex: 1; background: #f2f2f2; padding: 1rem; border-radius: 10px;">
+                            <strong>옥정호 벚꽃축제</strong><br>
+                            일일 평균 방문객: 17,500명
+                        </div>
+                    </div>
+
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div style="flex: 1; background: #f2f2f2; padding: 1rem; border-radius: 10px;">
+                            <strong>별빛축제</strong><br>
+                            일일 평균 방문객: 20,000명
+                        </div>
+                        <div style="font-size: 20px; color: #999;">→</div>
+                        <div style="flex: 1; background: #eee5f9; padding: 1rem; border-radius: 10px; border-left: 4px solid #9b6dcc;">
+                            <strong>🔬 과학·우주 테마</strong><br>
+                              과학관 등 특화 시설과 연계하여 운영되는 테마형 축제
+                        </div>
+                        <div style="font-size: 20px; color: #999;">→</div>
+                        <div style="flex: 1; background: #f2f2f2; padding: 1rem; border-radius: 10px;">
+                            <strong>우주항공축제</strong><br>
+                            일일 평균 방문객: 30,000명
+                        </div>
+                    </div>
+
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div style="flex: 1; background: #f2f2f2; padding: 1rem; border-radius: 10px;">
+                            <strong>와인페스타</strong><br>
+                            일일 평균 방문객: 20,000명
+                        </div>
+                        <div style="font-size: 20px; color: #999;">→</div>
+                        <div style="flex: 1; background: #fff5dd; padding: 1rem; border-radius: 10px; border-left: 4px solid #d4a42c;">
+                            <strong>🍇 특산물·과일 테마</strong><br>
+                            지역 농산물과 과일 홍보 및 체험 중심의 축제
+                        </div>
+                        <div style="font-size: 20px; color: #999;">→</div>
+                        <div style="flex: 1; background: #f2f2f2; padding: 1rem; border-radius: 10px;">
+                            <strong>오미자축제</strong><br>
+                            일일 평균 방문객: 16,666.7명
+                        </div>
+                    </div>
+
+                </div>
+                """)
+
     # ▶ 아래쪽: 표 3, 그래프 4
     with ui.layout_columns(col_widths=(6, 6)):
         with ui.card(full_screen=True):
@@ -58,8 +112,8 @@ with ui.nav_panel("Overview"):
             ui.input_radio_buttons(
                 id="infra_type",
                 label="업소 유형 선택",
-                choices=["식당", "숙소"],
-                selected="식당",
+                choices=["숙소", "식당"],
+                selected="숙소",
                 inline=True
             )
             @render_plotly
@@ -76,7 +130,8 @@ with ui.nav_panel("Overview"):
                 )
                 fig.update_layout(showlegend=False)
                 return fig
-            
+
+
 
 with ui.nav_panel("Map View"):
     ui.p("좌우 지도를 통해 서로 다른 축제를 선택하고 인프라(숙소, 식당, 카페 등)를 비교", style="font-size: 16px; color: #555;")
