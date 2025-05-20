@@ -19,7 +19,7 @@ from shared import df_info, df_compare, df_infra_summary, df_bar_long, df_infra_
 
 
 # ✅ 표 1: 축제 기본정보 (작약꽃축제 통합 버전)
-df_info["일일 평균 방문객"] = (df_info["총방문객(명)"] / df_info["일수(일)"]).round(1)
+df_info["일일 평균 방문객"] = (df_info["총방문객(명)"] / df_info["일수(일)"]).round(0)
 df_info_fixed = df_info.copy()
 df_info_fixed.loc[df_info_fixed["축제명"].isin(["작약꽃축제A", "작약꽃축제B", "작약꽃축제C"]), "축제명"] = "작약꽃축제(A/B/C)"
 df_info_display = df_info_fixed.drop_duplicates(subset="축제명")[
@@ -28,18 +28,19 @@ df_info_display = df_info_fixed.drop_duplicates(subset="축제명")[
 
 
 # ✅ Overview 탭 UI 구성
-ui.page_opts(title="영천시 축제 대시보드", fillable=True)
+ui.page_opts(title="영천시 축제 대시보드", fillable=False)
 
 
 with ui.nav_panel("Overview"):
     # ▶ 위쪽: 표 1, 2
     with ui.layout_columns(col_widths=(6, 6)):
-        with ui.card(full_screen=True):
+        with ui.card():
             ui.h4("1. 기본 정보 요약표")
             @render.data_frame
             def info_table():
                 return df_info_display
-        with ui.card(full_screen=True):
+            
+        with ui.card():
             ui.h4("2. 비교대상 선정 이유")
             @render.ui
             def compare_custom():
@@ -49,7 +50,7 @@ with ui.nav_panel("Overview"):
                     <div style="display: flex; align-items: center; gap: 1rem;">
                         <div style="flex: 1; background: #f2f2f2; padding: 1rem; border-radius: 10px;">
                             <strong>작약꽃축제</strong><br>
-                            일일 평균 방문객: 7,142.9명
+                            일일 평균 방문객: 7,143명
                         </div>
                         <div style="font-size: 20px; color: #999;">→</div>
                         <div style="flex: 1; background: #e6f4ea; padding: 1rem; border-radius: 10px; border-left: 4px solid #67c587;">
@@ -93,7 +94,7 @@ with ui.nav_panel("Overview"):
                         <div style="font-size: 20px; color: #999;">→</div>
                         <div style="flex: 1; background: #f2f2f2; padding: 1rem; border-radius: 10px;">
                             <strong>오미자축제</strong><br>
-                            일일 평균 방문객: 16,666.7명
+                            일일 평균 방문객: 16,667명
                         </div>
                     </div>
 
@@ -102,12 +103,13 @@ with ui.nav_panel("Overview"):
 
     # ▶ 아래쪽: 표 3, 그래프 4
     with ui.layout_columns(col_widths=(6, 6)):
-        with ui.card(full_screen=True):
+        with ui.card():
             ui.h4("3. 인프라 요약표")
             @render.data_frame
             def infra_table():
                 return df_infra_summary
-        with ui.card(full_screen=True):
+            
+        with ui.card():
             ui.h4("3-1. 인프라 막대그래프")
             ui.input_radio_buttons(
                 id="infra_type",
@@ -130,6 +132,39 @@ with ui.nav_panel("Overview"):
                 )
                 fig.update_layout(showlegend=False)
                 return fig
+            
+    with ui.card():
+        ui.h4("📌 축제 장소 특성 및 인프라 수용력 요약")
+        @render.ui
+        def festival_locations():
+            return ui.HTML("""
+                <div style="display: flex; flex-direction: column; gap: 1.5rem; font-size: 14px; font-family: sans-serif;">
+
+                    <div style="background: #f9f9f9; border-left: 5px solid #6da1ff; padding: 1rem; border-radius: 8px;">
+                        <strong>작약꽃축제</strong> – 영천 화북면 고지대에 위치, 경관은 뛰어나나 교통·주차 인프라 부족
+                    </div>
+
+                    <div style="background: #f9f9f9; border-left: 5px solid #c49fff; padding: 1rem; border-radius: 8px;">
+                        <strong>별빛축제</strong> – 천문대 연계 고지대 축제, 숙박 부족 / 야간 행사로 교통 대응 필요
+                    </div>
+
+                    <div style="background: #f9f9f9; border-left: 5px solid #8ae2aa; padding: 1rem; border-radius: 8px;">
+                        <strong>와인페스타</strong> – 영천 도심 공원 중심, 숙소·음식점 인프라 풍부, 수용력 우수
+                    </div>
+
+                    <div style="background: #f9f9f9; border-left: 5px solid #f4b76a; padding: 1rem; border-radius: 8px;">
+                        <strong>오미자축제</strong> – 문경 농촌 체험형, 소규모 수용력으로도 운영 무리 없음
+                    </div>
+
+                    <div style="background: #f9f9f9; border-left: 5px solid #f293a6; padding: 1rem; border-radius: 8px;">
+                        <strong>우주항공축제</strong> – 나로우주센터 중심, 숙박/음식점 부족, 교통 접근 어려움
+                    </div>
+
+                    <div style="background: #f9f9f9; border-left: 5px solid #b1dbff; padding: 1rem; border-radius: 8px;">
+                        <strong>옥정호 벚꽃축제</strong> – 수변 경관 중심, 적정 수준의 인프라 갖춤
+                    </div>
+                </div>
+            """)
 
 
 
