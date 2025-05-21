@@ -3,6 +3,7 @@ from shinywidgets import render_plotly
 import plotly.express as px
 import pathlib
 import pandas as pd
+from plotly import graph_objects as go
 
 # 데이터 로드
 from shared import df_info, df_compare, df_infra_summary, df_bar_long, df_infra_combined, df_stats, df_infra_merged
@@ -191,7 +192,7 @@ with ui.nav_panel("Map View"):
             @render.ui
             def map_left():
                 filename = 축제_파일_매핑[input.left_festival()]
-                return ui.HTML(f'<iframe src="/{filename}" width="100%" height="600px" style="border:none;"></iframe>')
+                return ui.HTML(f'<iframe src="{filename}" width="100%" height="600px" style="border:none;"></iframe>')
 
         with ui.card():
             ui.h4("📍 오른쪽 지도 (선택한 축제 위치)")
@@ -199,7 +200,7 @@ with ui.nav_panel("Map View"):
             @render.ui
             def map_right():
                 filename = 축제_파일_매핑[input.right_festival()]
-                return ui.HTML(f'<iframe src="/{filename}" width="100%" height="600px" style="border:none;"></iframe>')
+                return ui.HTML(f'<iframe src="{filename}" width="100%" height="600px" style="border:none;"></iframe>')
 
 
 with ui.nav_panel("Stats View"):
@@ -271,7 +272,7 @@ with ui.nav_panel("Stats View"):
                     
                     selected = input.selected_festival()
                     text_size = 13 if selected == "와인페스타" else 15
-                    
+
                     fig = px.pie(
                         count if not count.empty else pd.DataFrame({"구분2":["없음"], "수":[1]}),
                         names = "구분2",
@@ -427,6 +428,99 @@ with ui.nav_panel("Stats View"):
                         </tbody>
                     </table>
                     """)
+                    
+        with ui.layout_columns(col_widths=(6,6)):
+            with ui.card():
+                ui.h4("🎯 인프라 수 vs 일일 방문객 수 비교")
+                df_bar_long["축제명"] = df_bar_long["축제명"].replace({
+                    "작약꽃축제A": "작약꽃축제(A/B/C)",
+                    "작약꽃축제B": "작약꽃축제(A/B/C)",
+                    "작약꽃축제C": "작약꽃축제(A/B/C)"})
+                
+                df_info["축제명"] = df_info["축제명"].replace({
+                    "작약꽃축제A": "작약꽃축제(A/B/C)",
+                    "작약꽃축제B": "작약꽃축제(A/B/C)",    
+                    "작약꽃축제C": "작약꽃축제(A/B/C)"})
+
+                # 필터: 영천 축제 선택 + 업소 유형 선택
+
+                축제_비교_목록 = ["작약꽃축제(A/B/C)", "와인페스타", "별빛축제"]
+                업소유형목록 = sorted(df_bar_long["업소유형"].unique())
+
+                ui.input_select("비교기준축제", "✔ 영천시 축제를 선택하세요", 축제_비교_목록, selected="작약꽃축제(A/B/C)")
+                ui.input_checkbox_group("비교업소유형", "✔ 업소 유형 선택", 업소유형목록, selected=업소유형목록)
+
+                @render_plotly
+                def infra_visitor_graph():
+                    import plotly.graph_objects as go
+                    import plotly.express as px
+
+                    festival_pair = {
+                        "작약꽃축제(A/B/C)": ["작약꽃축제(A/B/C)", "옥정호 벚꽃축제"],
+                        "와인페스타": ["와인페스타", "오미자축제"],
+                        "별빛축제": ["별빛축제", "우주항공축제"]
+                    }
+
+                    선택축제 = input.비교기준축제()
+                    선택업소유형 = input.비교업소유형()
+                    비교축제들 = festival_pair[선택축제]
+
+                    df_filtered = df_bar_long[
+                        (df_bar_long["축제명"].isin(비교축제들)) &
+                        (df_bar_long["업소유형"].isin(선택업소유형))
+                    ]
+
+                    fig = go.Figure()
+                    color_list = px.colors.qualitative.Pastel
+
+                    # ✅ 막대그래프 (왼쪽 y축)
+                    for i, 유형 in enumerate(선택업소유형):
+                        df_sub = df_filtered[df_filtered["업소유형"] == 유형]
+                        fig.add_trace(go.Bar(
+                            x=df_sub["축제명"],
+                            y=df_sub["업소수"],
+                            name=유형,
+                            marker_color=color_list[i % len(color_list)],
+                            yaxis="y"  # 기본값이라 생략 가능
+                        ))
+
+                    # ✅ 방문객 수 점 그래프 (오른쪽 y축)
+                    visitor_dict = df_info.set_index("축제명")["일일방문객(명)"].to_dict()
+                    visitor_raw = [visitor_dict.get(f, 0) for f in 비교축제들]
+
+                    fig.add_trace(go.Scatter(
+                        x=비교축제들,
+                        y=visitor_raw,
+                        mode="markers+text",
+                        name="일일 방문객 수",
+                        text=[f"{v:,.0f}명" for v in visitor_raw],
+                        textposition="top center",
+                        marker=dict(size=12, color="black", symbol="diamond"),
+                        yaxis="y2"
+                    ))
+        
+                    # ✅ 이중 y축 설정
+                    fig.update_layout(
+                        barmode="stack",
+                        title=f"{선택축제} vs 유사 축제: 인프라 + 방문객 수 비교",
+                        xaxis_title="축제명",
+                        yaxis=dict(
+                            title="숙소/식당 수",
+                            side="left"
+                        ),
+                        yaxis2=dict(
+                            title="일일 방문객 수 (명)",
+                            overlaying="y",
+                            side="right",
+                            range=[0, 40000],
+                            showgrid=False
+                        ),
+                        legend_title="항목",
+                        height=550
+                    )
+        
+                    return fig
+        
 
 
 with ui.nav_panel("Insight View"):

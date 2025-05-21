@@ -1,0 +1,12 @@
+{
+    "https://api.shinyapps.io": {
+        "server_url": "https://api.shinyapps.io",
+        "filename": "C:\\Users\\USER\\Documents\\test-project\\dashboard3\\Yeongcheon_project",
+        "app_url": "https://juyn.shinyapps.io/yeongcheon-vis/",
+        "app_id": 14795404,
+        "app_guid": null,
+        "title": "yeoungcheon-vis",
+        "app_mode": "python-shiny",
+        "app_store_version": 1
+    }
+}
