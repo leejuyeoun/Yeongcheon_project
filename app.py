@@ -10,12 +10,12 @@ from shared import df_info, df_compare, df_infra_summary, df_bar_long, df_infra_
 
 # ✅ HTML 파일 매핑
 축제_파일_매핑 = {
-    "작약꽃축제": "작약꽃축제.html",
-    "와인페스타": "와인페스타.html",
-    "별빛축제": "별빛축제.html",
-    "벚꽃축제": "벚꽃축제.html",
-    "오미자축제": "오미자축제.html",
-    "우주항공축제": "우주항공축제_.html"
+    "작약꽃축제": "작약꽃축제_.html",
+    "와인페스타": "와인페스타_.html",
+    "별빛축제": "별빛축제_.html",
+    "벚꽃축제": "벚꽃축제_.html",
+    "오미자축제": "오미자축제_.html",
+    "우주항공축제": "우주항공축제.html"
 }
 
 
@@ -26,6 +26,94 @@ df_info_fixed.loc[df_info_fixed["축제명"].isin(["작약꽃축제A", "작약�
 df_info_display = df_info_fixed.drop_duplicates(subset="축제명")[
     ["축제명", "지역", "일수(일)", "총방문객(명)", "일일 평균 방문객", "개최시기(월)"]
 ].reset_index(drop=True)
+
+
+with ui.nav_panel("Festival Snapshot"):
+    ui.h2("📌 축제 한눈에 보기", style="margin-bottom: 2rem;")
+
+    ui.HTML("""
+    <style>
+        .hover-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .hover-card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+        }
+    </style>
+    """)
+
+    with ui.layout_columns(col_widths=(4, 4, 4), gap="2rem"):
+
+        # 작약꽃축제 카드
+        with ui.card(style="background-color: #FFF8EF; border: 2px solid #DB6C7E; border-radius: 12px; padding: 0; overflow: hidden;", class_="hover-card"):
+            ui.HTML('''
+                <div style="background-color: #DB6C7E; color: white; padding: 0.6rem 1rem; font-weight: bold; font-size: 1.2rem;">
+                    🌸 작약꽃축제
+                </div>
+            ''')
+            ui.HTML('<img src="/peony.jpg" style="width: 100%; height: auto;">')
+            with ui.layout_columns(col_widths=(3, 9), style="padding: 1rem;"):
+                ui.HTML('<div style="font-size: 2rem;">🌷</div>')
+                ui.HTML('<div><strong style="font-size: 1.3rem;color: #DB6C7E; ">1일 방문객<br><span style="font-size: 1.6rem; color: #DB6C7E;">4만 명</span></strong></div>')
+            ui.HTML('<img src="/sample_graph_peony.png" style="width: 100%; border-radius: 6px;">')
+            ui.HTML('<div style="padding: 0 1rem 1rem 1rem; font-size: 14px; line-height: 1.5;">화사한 봄꽃과 함께하는 작약꽃축제는 자연의 아름다움을 담아낸 계절형 축제로, 높은 방문 만족도를 자랑합니다.</div>')
+
+        # 와인페스타 카드
+        with ui.card(style="background-color: #FFF8EF; border: 2px solid #8d6e63; border-radius: 12px; padding: 0; overflow: hidden;", class_="hover-card"):
+            ui.HTML('''
+                <div style="background-color: #8d6e63; color: white; padding: 0.6rem 1rem; font-weight: bold; font-size: 1.2rem;">
+                    🍷 와인페스타
+                </div>
+            ''')
+            ui.HTML('<img src="/wine.jpg" style="width: 100%; height: auto;">')
+            with ui.layout_columns(col_widths=(3, 9), style="padding: 1rem;"):
+                ui.HTML('<div style="font-size: 2rem;">🍷</div>')
+                ui.HTML('<div><strong style="font-size: 1.3rem;color: #8d6e63;">1일 방문객<br><span style="font-size: 1.6rem; color: #8d6e63;">5만 명</span></strong></div>')
+            ui.HTML('<img src="/sample_graph_wine.png" style="width: 100%; border-radius: 6px;">')
+            ui.HTML('<div style="padding: 0 1rem 1rem 1rem; font-size: 14px; line-height: 1.5;">지역 특산 와인과 함께하는 와인페스타는 체험과 미식이 어우러진 프리미엄 축제입니다.</div>')
+
+        # 별빛축제 카드
+        with ui.card(style="background-color: #FFF8EF; border: 2px solid #745D8E; border-radius: 12px; padding: 0; overflow: hidden;", class_="hover-card"):
+            ui.HTML('''
+                <div style="background-color: #745D8E; color: white; padding: 0.6rem 1rem; font-weight: bold; font-size: 1.2rem;">
+                    🌌 별빛축제
+                </div>
+            ''')
+            ui.HTML('<img src="/starlight.jpg" style="width: 100%; height: auto;">')
+            with ui.layout_columns(col_widths=(3, 9), style="padding: 1rem;"):
+                ui.HTML('<div style="font-size: 2rem;">🌙</div>')
+                ui.HTML('<div><strong style="font-size: 1.3rem;color: #745D8E;">1일 방문객<br><span style="font-size: 1.6rem; color: #745D8E;">6만 명</span></strong></div>')
+            ui.HTML('<img src="/sample_graph_star.png" style="width: 100%; border-radius: 6px;">')
+            ui.HTML('<div style="padding: 0 1rem 1rem 1rem; font-size: 14px; line-height: 1.5;">천문대와 연계된 별빛축제는 과학과 자연이 만나는 체험형 축제로, 가족 단위 관람객에게 인기가 많습니다.</div>')
+
+    # ▶ 카드 아래 단일 열로 구성된 전체 폭 버튼
+    with ui.div(style="display: flex; justify-content: center; margin-top: 2rem;"):
+        ui.input_action_button(
+            "compare_button",
+            "👉 유사 축제와 비교하기",
+            class_="btn btn-lg",
+            style=(
+                "width: 100%; max-width: 960px; font-size: 20px; padding: 1.2rem 2rem; "
+                "background-color: #5a7dad; color: white; border: none; border-radius: 12px; font-weight: bold;"
+            )
+        )
+
+        # ▶ JS 클릭 시 탭 이동
+        ui.HTML("""
+        <script>
+            setTimeout(function() {
+                const btn = document.getElementById("compare_button");
+                if (btn) {
+                    btn.onclick = function() {
+                        const tab = document.querySelector('a[data-value="Map View"]');
+                        if (tab) tab.click();
+                    };
+                }
+            }, 300);
+        </script>
+        """)
 
 
 # ✅ Overview 탭 UI 구성
@@ -128,14 +216,13 @@ with ui.nav_panel("Overview"):
                 value = True
             )
 
+    
             @render_plotly
             def infra_bar():
                 df_filtered = df_bar_long[df_bar_long["업소유형"] == input.infra_type()]
-
                 # 와인 페스타 필터링
                 if not input.include_wine() :
                     df_filtered = df_filtered[df_filtered["축제명"] != "와인페스타"]
-
                 fig = px.bar(
                     df_filtered,
                     x="축제명",
@@ -182,25 +269,149 @@ with ui.nav_panel("Overview"):
             """)
 
 
-
 with ui.nav_panel("Map View"):
-    ui.p("좌우 지도를 통해 서로 다른 축제를 선택하고 인프라(숙소, 식당, 카페 등)를 비교", style="font-size: 16px; color: #555;")
+    ui.h4("유사 축제 인프라 비교", style="margin-top: 1rem; color: #444;")
+    ui.p("아래에서 두 개의 축제를 선택하고 위치 및 인프라를 비교하세요.", style="font-size: 15px; color: #666;")
+
+    # 축제 선택 필터
     with ui.layout_columns(col_widths=(6, 6)):
         with ui.card():
-            ui.h4("📍 왼쪽 지도 (선택한 축제 위치)")
-            ui.input_select("left_festival", "🎯 왼쪽 지도: 축제를 선택하세요", list(축제_파일_매핑.keys()), selected="작약꽃축제")
+            ui.h5("왼쪽 축제 선택", style="color: #333;")
+            ui.input_select("left_festival", "왼쪽 지도: 축제를 선택하세요", list(축제_파일_매핑.keys()), selected="작약꽃축제")
+
+        with ui.card():
+            ui.h5("오른쪽 축제 선택", style="color: #333;")
+            ui.input_select("right_festival", "오른쪽 지도: 축제를 선택하세요", list(축제_파일_매핑.keys()), selected="와인페스타")
+
+    # 지도 및 인프라 요약 정보
+    with ui.layout_columns(col_widths=(6, 6)):
+        with ui.card():
+            ui.h5("왼쪽 축제 위치 지도")
             @render.ui
             def map_left():
                 filename = 축제_파일_매핑[input.left_festival()]
-                return ui.HTML(f'<iframe src="{filename}" width="100%" height="600px" style="border:none;"></iframe>')
+                return ui.HTML(f'<iframe src="{filename}" width="100%" height="500px" style="border:none; border-radius: 8px;"></iframe>')
+
+            # 왼쪽 축제 인프라 요약 박스
+            def infra_summary(festival):
+                df = df_infra_merged[df_infra_merged["축제명"].str.contains(festival, na=False)]
+                숙소 = df[df["구분1"] == "숙소"].shape[0]
+                식당 = df[df["구분1"] == "식당"].shape[0]
+                화장실 = df[df["구분1"] == "화장실"].shape[0]
+                주차장 = df[df["구분1"] == "주차장"].shape[0]
+                return 숙소, 식당, 화장실, 주차장
+
+            with ui.layout_columns(col_widths=[3, 3, 3, 3]):
+                with ui.value_box():
+                    "숙소"
+                    @render.express
+                    def vb1():
+                        f"{infra_summary(input.left_festival())[0]}개"
+
+                with ui.value_box():
+                    "식당"
+                    @render.express
+                    def vb2():
+                        f"{infra_summary(input.left_festival())[1]}개"
+
+                with ui.value_box():
+                    "화장실"
+                    @render.express
+                    def vb3():
+                        f"{infra_summary(input.left_festival())[2]}개"
+
+                with ui.value_box():
+                    "주차장"
+                    @render.express
+                    def vb4():
+                        f"{infra_summary(input.left_festival())[3]}개"
 
         with ui.card():
-            ui.h4("📍 오른쪽 지도 (선택한 축제 위치)")
-            ui.input_select("right_festival", "🎯 오른쪽 지도: 축제를 선택하세요", list(축제_파일_매핑.keys()), selected="와인페스타")
+            ui.h5("오른쪽 축제 위치 지도")
             @render.ui
             def map_right():
                 filename = 축제_파일_매핑[input.right_festival()]
-                return ui.HTML(f'<iframe src="{filename}" width="100%" height="600px" style="border:none;"></iframe>')
+                return ui.HTML(f'<iframe src="{filename}" width="100%" height="500px" style="border:none; border-radius: 8px;"></iframe>')
+
+            with ui.layout_columns(col_widths=[3, 3, 3, 3]):
+                with ui.value_box():
+                    "숙소"
+                    @render.express
+                    def vb5():
+                        f"{infra_summary(input.right_festival())[0]}개"
+
+                with ui.value_box():
+                    "식당"
+                    @render.express
+                    def vb6():
+                        f"{infra_summary(input.right_festival())[1]}개"
+
+                with ui.value_box():
+                    "화장실"
+                    @render.express
+                    def vb7():
+                        f"{infra_summary(input.right_festival())[2]}개"
+
+                with ui.value_box():
+                    "주차장"
+                    @render.express
+                    def vb8():
+                        f"{infra_summary(input.right_festival())[3]}개"
+
+    # 세부 유형 막대그래프
+    with ui.layout_columns():
+        with ui.card():
+            ui.h5("왼쪽 축제 인프라 세부 유형")
+            @render_plotly
+            def bar_left():
+                df = df_infra_merged[df_infra_merged["축제명"].str.contains(input.left_festival(), na=False)]
+                df = df[df["구분1"].isin(["숙소", "식당"])]
+                g = df.groupby(["구분1", "구분2"]).size().reset_index(name="count")
+                fig = px.bar(g, x="구분2", y="count", color="구분1", barmode="group",
+                             color_discrete_sequence=px.colors.qualitative.Pastel)
+                fig.update_layout(height=300)
+                return fig
+
+        with ui.card():
+            ui.h5("오른쪽 축제 인프라 세부 유형")
+            @render_plotly
+            def bar_right():
+                df = df_infra_merged[df_infra_merged["축제명"].str.contains(input.right_festival(), na=False)]
+                df = df[df["구분1"].isin(["숙소", "식당"])]
+                g = df.groupby(["구분1", "구분2"]).size().reset_index(name="count")
+                fig = px.bar(g, x="구분2", y="count", color="구분1", barmode="group",
+                             color_discrete_sequence=px.colors.qualitative.Pastel)
+                fig.update_layout(height=300)
+                return fig
+
+    # 막대그래프: 축제별 숙소/식당/화장실/주차장 수 비교
+    with ui.card():
+        ui.h5("주요 인프라 항목 수 비교", style="margin-top: 1rem;")
+        @render_plotly
+        def infra_compare_bar():
+            left = input.left_festival()
+            right = input.right_festival()
+            df = df_infra_merged.copy()
+            df = df[df["구분1"].isin(["숙소", "식당", "화장실", "주차장"])]
+
+            # 요약 데이터프레임 생성
+            summary = df[df["축제명"].str.contains(left, na=False)].groupby("구분1").size().reset_index(name=left)
+            summary2 = df[df["축제명"].str.contains(right, na=False)].groupby("구분1").size().reset_index(name=right)
+            merged = pd.merge(summary, summary2, on="구분1", how="outer").fillna(0)
+
+            df_plot = pd.melt(merged, id_vars="구분1", var_name="축제명", value_name="개수")
+            fig = px.bar(df_plot, x="구분1", y="개수", color="축제명", barmode="group",
+                         color_discrete_sequence=px.colors.qualitative.Pastel)
+            fig.update_layout(height=400)
+            return fig
+
+
+
+
+
+
+
+
 
 
 with ui.nav_panel("Stats View"):
@@ -211,7 +422,7 @@ with ui.nav_panel("Stats View"):
 
     # ✅ 사이드바 및 본문 레이아웃
     with ui.layout_sidebar():
-        with ui.sidebar(title="Filter controls", open="desktop", bg="#f8f8f8"):
+        with ui.sidebar():
             ui.input_select(
                 id="selected_festival",
                 label="🎯 축제를 선택하세요",
@@ -280,8 +491,8 @@ with ui.nav_panel("Stats View"):
                         title="어떤 종류의 식당이 더 많을까?",
                         hole = 0.4,
                         color_discrete_sequence=px.colors.qualitative.Pastel
-                    )
-                    fig.update_traces(textinfo = "percent+label", textposition = 'outside', textfont_size = text_size)
+                    );
+                    fig.update_traces(textinfo = "percent+label", textposition = 'outside', textfont_size = text_size);
                     return fig
 
 
@@ -521,7 +732,3 @@ with ui.nav_panel("Stats View"):
         
                     return fig
         
-
-
-with ui.nav_panel("Insight View"):
-    "💡 인사이트 도출 페이지입니다."
