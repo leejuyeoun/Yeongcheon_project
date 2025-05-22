@@ -32,7 +32,7 @@ df_info_display = df_info_fixed.drop_duplicates(subset="축제명")[
 ].reset_index(drop=True)
 
 
-with ui.nav_panel("Festival Snapshot"):
+with ui.nav_panel("Overview"):
     ui.h2(" 축제 한눈에 보기", style="margin-bottom: 2rem;")
 
 # ▶ Festival Snapshot 패널 안 CSS 정의 부분에서 다음 내용 추가
@@ -362,10 +362,41 @@ with ui.nav_panel("Map View"):
         with ui.card():
             ui.h5("왼쪽 축제 선택", style="color: #333;")
             ui.input_select("left_festival", "왼쪽 지도: 축제를 선택하세요", list(축제_파일_매핑.keys()), selected="작약꽃축제")
+        # 🔵 왼쪽 축제의 방문객 수 출력
+            @render.text
+            def left_visitors():
+                # 작약꽃축제 A/B/C 통합 처리 포함
+                selected = input.left_festival()
+                selected_mapped = (
+                    "작약꽃축제(A/B/C)" if "작약꽃축제" in selected else selected
+                )
 
+                row = df_info_display[df_info_display["축제명"] == selected_mapped]
+                if not row.empty:
+                    count = int(row.iloc[0]["일일 평균 방문객"])
+                    return f"일일 평균 방문객 수: 약 {count:,}명"
+                else:
+                    return "일일 평균 방문객 수: 정보 없음"
+                
         with ui.card():
             ui.h5("오른쪽 축제 선택", style="color: #333;")
             ui.input_select("right_festival", "오른쪽 지도: 축제를 선택하세요", list(축제_파일_매핑.keys()), selected="벚꽃축제")
+            # 🔵 오른쪽쪽 축제의 방문객 수 출력
+            @render.text
+            def right_visitors():
+                # 작약꽃축제 A/B/C 통합 처리 포함
+                selected = input.right_festival()
+                selected_mapped = (
+                    "작약꽃축제(A/B/C)" if "작약꽃축제" in selected else selected
+                )
+
+                row = df_info_display[df_info_display["축제명"] == selected_mapped]
+                if not row.empty:
+                    count = int(row.iloc[0]["일일 평균 방문객"])
+                    return f"일일 평균 방문객 수: 약 {count:,}명"
+                else:
+                    return "일일 평균 방문객 수: 정보 없음"
+
 
     # 지도 및 인프라 요약 정보
     with ui.layout_columns(col_widths=(6, 6)):
