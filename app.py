@@ -42,51 +42,114 @@ with ui.nav_panel("Festival Snapshot"):
             cursor: pointer;
         }
     </style>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const cards = document.querySelectorAll(".hover-card");
+
+            // 카드 순서에 맞는 실제 드롭다운 값 배열
+            const festivalValues = ["작약꽃축제A", "와인페스타", "별빛축제"];
+
+            cards.forEach(function(card, index) {
+                card.addEventListener("click", function() {
+                    Shiny.setInputValue("__nav_festival_snapshot__", "Stats View", {priority: "event"});
+                    setTimeout(function () {
+                        const dropdown = document.querySelector('select#selected_festival');
+                        if (dropdown) {
+                            dropdown.value = festivalValues[index];
+                            dropdown.dispatchEvent(new Event("change", { bubbles: true }));
+                        }
+                    }, 500);
+                });
+            });
+        });
+    </script>
     """)
 
-    with ui.layout_columns(col_widths=(4, 4, 4), gap="2rem"):
+    with ui.layout_columns(gap="2rem", col_widths=(4, 4, 4)):
+    
+        # ✅ 작약꽃축제 카드
+        ui.HTML("""
+        <div class="festival-card hover-card" style="background-color: #FFF8EF; border: 2px solid #DB6C7E; border-radius: 10px; overflow: hidden; font-family: sans-serif; color: #DB6C7E;">
+          <div style="background-color: #DB6C7E; color: white; padding: 0.8rem 1.2rem; font-size: 1.3rem; font-weight: bold;">
+            🌸 작약꽃축제
+          </div>
+          <div style="background-color: #f0f4f8; height: 160px; display: flex; align-items: center; justify-content: center; border-bottom: 2px solid #DB6C7E;">
+            <img src="/peony.jpg" alt="작약꽃축제" style="width: 100%; height: 100%; object-fit: cover;">
+          </div>
+          <div style="display: flex; border-bottom: 2px solid #DB6C7E;">
+            <div style="flex: 1; display: flex; flex-direction: column; border-right: 2px solid #DB6C7E;">
+              <div style="flex: 2; padding: 1rem; font-weight: bold;">숙소: 18개<br>식당: 32개</div>
+              <div style="flex: 1; padding: 0.8rem; border-top: 2px solid #DB6C7E;">고지대 위치, 주차 불편</div>
+            </div>
+            <div style="flex: 1; padding: 1rem;">봄꽃 테마 자연경관 중심 축제</div>
+          </div>
+          <div style="display: flex; border-bottom: 2px solid #DB6C7E;">
+            <div style="flex: 1; padding: 1rem; border-right: 2px solid #DB6C7E;">
+             총 방문객 12만 명<br>
+             <span style="color: #DB6C7E; font-size: 1.2rem; font-weight: bold;">1일 방문객 4만 명</span>
+            </div>
+            <div style="flex: 3; padding: 1rem;">유사축제: 옥정호 벚꽃축제</div>
+          </div>
+          <div style="padding: 1rem; background-color: #fafafa;">경관은 우수하나 교통 및 주차 인프라가 다소 부족</div>
+        </div>
+        """)
+    
+        # ✅ 와인페스타 카드
+        ui.HTML("""
+        <div class="festival-card hover-card" style="background-color: #FFF8EF; border: 2px solid #8d6e63; border-radius: 10px; overflow: hidden; font-family: sans-serif; color: #8d6e63;">
+          <div style="background-color: #8d6e63; color: white; padding: 0.8rem 1.2rem; font-size: 1.3rem; font-weight: bold;">
+            🍷 와인페스타
+          </div>
+          <div style="background-color: #f0f4f8; height: 160px; display: flex; align-items: center; justify-content: center; border-bottom: 2px solid #8d6e63;">
+            <img src="/wine.jpg" alt="와인페스타" style="width: 100%; height: 100%; object-fit: cover;">
+          </div>
+          <div style="display: flex; border-bottom: 2px solid #8d6e63;">
+            <div style="flex: 1; display: flex; flex-direction: column; border-right: 2px solid #8d6e63;">
+              <div style="flex: 2; padding: 1rem; font-weight: bold;">숙소: 35개<br>식당: 58개</div>
+              <div style="flex: 1; padding: 0.8rem; border-top: 2px solid #8d6e63;">도심 중심, 인프라 풍부</div>
+            </div>
+            <div style="flex: 1; padding: 1rem;">특산물 중심의 체험형 축제</div>
+          </div>
+          <div style="display: flex; border-bottom: 2px solid #8d6e63;">
+            <div style="flex: 1; padding: 1rem; border-right: 2px solid #8d6e63;">
+             총 방문객 15만 명<br>
+             <span style="color: #8d6e63; font-size: 1.2rem; font-weight: bold;">1일 방문객 5만 명</span>
+            </div>
+            <div style="flex: 3; padding: 1rem;">유사축제: 오미자축제</div>
+          </div>
+          <div style="padding: 1rem; background-color: #fafafa;">도심 기반으로 교통 접근성 및 수용력 우수</div>
+        </div>
+        """)
+    
+        # ✅ 별빛축제 카드
+        ui.HTML("""
+        <div class="festival-card hover-card" style="background-color: #FFF8EF; border: 2px solid #745D8E; border-radius: 10px; overflow: hidden; font-family: sans-serif; color: #745D8E;">
+          <div style="background-color: #745D8E; color: white; padding: 0.8rem 1.2rem; font-size: 1.3rem; font-weight: bold;">
+            🌌 별빛축제
+          </div>
+          <div style="background-color: #f0f4f8; height: 160px; display: flex; align-items: center; justify-content: center; border-bottom: 2px solid #745D8E;">
+            <img src="/starlight.jpg" alt="별빛축제" style="width: 100%; height: 100%; object-fit: cover;">
+          </div>
+          <div style="display: flex; border-bottom: 2px solid #745D8E;">
+            <div style="flex: 1; display: flex; flex-direction: column; border-right: 2px solid #745D8E;">
+              <div style="flex: 2; padding: 1rem; font-weight: bold;">숙소: 12개<br>식당: 24개</div>
+              <div style="flex: 1; padding: 0.8rem; border-top: 2px solid #745D8E;">야간 중심 행사 / 천문대 연계</div>
+            </div>
+            <div style="flex: 1; padding: 1rem;">과학·우주 테마형 체험 중심 축제</div>
+          </div>
+          <div style="display: flex; border-bottom: 2px solid #745D8E;">
+            <div style="flex: 1; padding: 1rem; border-right: 2px solid #745D8E;">
+             총 방문객 18만 명<br>
+             <span style="color: #745D8E; font-size: 1.2rem; font-weight: bold;">1일 방문객 6만 명</span>
+            </div>
+            <div style="flex: 3; padding: 1rem;">유사축제: 우주항공축제</div>
+          </div>
+          <div style="padding: 1rem; background-color: #fafafa;">숙박 부족과 야간 교통 대응이 과제로 남음</div>
+        </div>
+        """)
 
-        # 작약꽃축제 카드
-        with ui.card(style="background-color: #FFF8EF; border: 2px solid #DB6C7E; border-radius: 12px; padding: 0; overflow: hidden;", class_="hover-card"):
-            ui.HTML('''
-                <div style="background-color: #DB6C7E; color: white; padding: 0.6rem 1rem; font-weight: bold; font-size: 1.2rem;">
-                    🌸 작약꽃축제
-                </div>
-            ''')
-            ui.HTML('<img src="peony.jpg" style="width: 100%; height: auto;">')
-            with ui.layout_columns(col_widths=(3, 9), style="padding: 1rem;"):
-                ui.HTML('<div style="font-size: 2rem;">🌷</div>')
-                ui.HTML('<div><strong style="font-size: 1.3rem;color: #DB6C7E; ">1일 방문객<br><span style="font-size: 1.6rem; color: #DB6C7E;">4만 명</span></strong></div>')
-            ui.HTML('<img src="sample_graph_peony.png" style="width: 100%; border-radius: 6px;">')
-            ui.HTML('<div style="padding: 0 1rem 1rem 1rem; font-size: 14px; line-height: 1.5;">화사한 봄꽃과 함께하는 작약꽃축제는 자연의 아름다움을 담아낸 계절형 축제로, 높은 방문 만족도를 자랑합니다.</div>')
 
-        # 와인페스타 카드
-        with ui.card(style="background-color: #FFF8EF; border: 2px solid #8d6e63; border-radius: 12px; padding: 0; overflow: hidden;", class_="hover-card"):
-            ui.HTML('''
-                <div style="background-color: #8d6e63; color: white; padding: 0.6rem 1rem; font-weight: bold; font-size: 1.2rem;">
-                    🍷 와인페스타
-                </div>
-            ''')
-            ui.HTML('<img src="wine.jpg" style="width: 100%; height: auto;">')
-            with ui.layout_columns(col_widths=(3, 9), style="padding: 1rem;"):
-                ui.HTML('<div style="font-size: 2rem;">🍷</div>')
-                ui.HTML('<div><strong style="font-size: 1.3rem;color: #8d6e63;">1일 방문객<br><span style="font-size: 1.6rem; color: #8d6e63;">5만 명</span></strong></div>')
-            ui.HTML('<img src="sample_graph_wine.png" style="width: 100%; border-radius: 6px;">')
-            ui.HTML('<div style="padding: 0 1rem 1rem 1rem; font-size: 14px; line-height: 1.5;">지역 특산 와인과 함께하는 와인페스타는 체험과 미식이 어우러진 프리미엄 축제입니다.</div>')
-
-        # 별빛축제 카드
-        with ui.card(style="background-color: #FFF8EF; border: 2px solid #745D8E; border-radius: 12px; padding: 0; overflow: hidden;", class_="hover-card"):
-            ui.HTML('''
-                <div style="background-color: #745D8E; color: white; padding: 0.6rem 1rem; font-weight: bold; font-size: 1.2rem;">
-                    🌌 별빛축제
-                </div>
-            ''')
-            ui.HTML('<img src="starlight.jpg" style="width: 100%; height: auto;">')
-            with ui.layout_columns(col_widths=(3, 9), style="padding: 1rem;"):
-                ui.HTML('<div style="font-size: 2rem;">🌙</div>')
-                ui.HTML('<div><strong style="font-size: 1.3rem;color: #745D8E;">1일 방문객<br><span style="font-size: 1.6rem; color: #745D8E;">6만 명</span></strong></div>')
-            ui.HTML('<img src="sample_graph_star.png" style="width: 100%; border-radius: 6px;">')
-            ui.HTML('<div style="padding: 0 1rem 1rem 1rem; font-size: 14px; line-height: 1.5;">천문대와 연계된 별빛축제는 과학과 자연이 만나는 체험형 축제로, 가족 단위 관람객에게 인기가 많습니다.</div>')
 
     # ▶ 카드 아래 단일 열로 구성된 전체 폭 버튼
     with ui.div(style="display: flex; justify-content: center; margin-top: 2rem;"):
@@ -100,20 +163,44 @@ with ui.nav_panel("Festival Snapshot"):
             )
         )
 
-        # ▶ JS 클릭 시 탭 이동
-        ui.HTML("""
-        <script>
-            setTimeout(function() {
-                const btn = document.getElementById("compare_button");
-                if (btn) {
-                    btn.onclick = function() {
-                        const tab = document.querySelector('a[data-value="Map View"]');
-                        if (tab) tab.click();
-                    };
-                }
-            }, 300);
-        </script>
-        """)
+    # ▶ JS 코드: 카드 클릭 시 Stats View 이동
+    ui.HTML("""
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll(".hover-card").forEach(function(card) {
+                card.addEventListener("click", function() {
+                    const tab = document.querySelector('a[data-value="Stats View"]');
+                    if (tab) tab.click();
+                });
+            });
+        });
+    </script>
+    """)
+
+    # ▶ JS 코드: 버튼 클릭 시 Map View 이동 및 포커스 해제
+    ui.HTML("""
+    <script>
+        setTimeout(function() {
+            const btn = document.getElementById("compare_button");
+            if (btn) {
+                btn.onclick = function() {
+                    const tab = document.querySelector('a[data-value="Map View"]');
+                    if (tab) tab.click();
+                    btn.blur(); // 포커스 해제
+                };
+            }
+        }, 300);
+    </script>
+    """)
+
+
+
+
+
+
+
+
+
 
 
 # ✅ Overview 탭 UI 구성
@@ -645,18 +732,18 @@ with ui.nav_panel("Stats View"):
                     df_화장실 = df_stats[df_stats["구분1"] == "화장실"].copy()
                     축제_목록 = df_stats["축제명"].dropna().unique()
                     구분2_목록 = df_화장실["구분2"].dropna().unique()
-    
+
                     전체_조합 = pd.MultiIndex.from_product(
                         [축제_목록, 구분2_목록],
                         names=["축제명", "구분2"]
                     ).to_frame(index=False)
-    
+
                     count = df_화장실.groupby(["축제명", "구분2"]).size().reset_index(name="수")
                     merged = pd.merge(전체_조합, count, on=["축제명", "구분2"], how="left").fillna(0)
                     merged["수"] = merged["수"].astype(int)
-    
+
                     selected = input.selected_festival()
-    
+
                     fig = px.bar(
                         merged,
                         x="구분2",
@@ -669,11 +756,11 @@ with ui.nav_panel("Stats View"):
                         height=450,
                         color_discrete_sequence=px.colors.qualitative.Pastel
                     )
-    
+
                     for trace in fig.data:
                         trace.textposition = "outside"
                         trace.marker.opacity = 1.0 if trace.name == selected else 0.2
-    
+
                     fig.update_layout(
                         legend_title_text="축제명",
                         showlegend=True,
@@ -686,9 +773,9 @@ with ui.nav_panel("Stats View"):
                         ),
                         margin=dict(b=80)
                     )
-    
+
                     return fig
-    
+
             # ✅ 오른쪽: 공영주차장 수 그래프 (기존 코드 그대로)
             with ui.card():
                 ui.h4("공영주차장 수")
@@ -697,18 +784,18 @@ with ui.nav_panel("Stats View"):
                     df_주차 = df_stats[df_stats["구분1"] == "주차장"].copy()
                     축제_목록 = df_stats["축제명"].dropna().unique()
                     구분2_목록 = df_주차["구분2"].dropna().unique()
-    
+
                     전체_조합 = pd.MultiIndex.from_product(
                         [축제_목록, 구분2_목록],
                         names=["축제명", "구분2"]
                     ).to_frame(index=False)
-    
+
                     count = df_주차.groupby(["축제명", "구분2"]).size().reset_index(name="수")
                     merged = pd.merge(전체_조합, count, on=["축제명", "구분2"], how="left").fillna(0)
                     merged["수"] = merged["수"].astype(int)
-    
+
                     selected = input.selected_festival()
-    
+
                     fig = px.bar(
                         merged,
                         x="구분2",
@@ -721,11 +808,11 @@ with ui.nav_panel("Stats View"):
                         height=450,
                         color_discrete_sequence=px.colors.qualitative.Pastel
                     )
-    
+
                     for trace in fig.data:
                         trace.textposition = "outside"
                         trace.marker.opacity = 1.0 if trace.name == selected else 0.2
-    
+
                     fig.update_layout(
                         legend_title_text="축제명",
                         showlegend=True,
@@ -738,9 +825,9 @@ with ui.nav_panel("Stats View"):
                         ),
                         margin=dict(b=80)
                     )
-    
+
                     return fig
-    
+
 
 
 
