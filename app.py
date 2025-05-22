@@ -89,7 +89,7 @@ with ui.nav_panel("Festival Snapshot"):
         <div class="festival-card hover-card" style="background-color: #FAFAFA; border: 2px solid #DB6C7E; border-radius: 10px; overflow: hidden; font-family: sans-serif; color: #DB6C7E;">
             <div style="background-color: #DB6C7E; color: white; padding: 0.8rem 1.2rem; font-size: 1.3rem; font-weight: bold;">🌸 작약꽃축제</div>
             <div style="height: 160px; display: flex; align-items: center; justify-content: center; border-bottom: 2px solid #DB6C7E;">
-                <img src="/peony.jpg" style="width: 100%; height: 100%; object-fit: cover;">
+                <img src="peony.jpg" style="width: 100%; height: 100%; object-fit: cover;">
             </div>
             <div style="display: flex; border-bottom: 2px solid #DB6C7E;">
                 <div style="flex: 1; display: flex; flex-direction: column; border-right: 2px solid #DB6C7E;">
@@ -114,7 +114,7 @@ with ui.nav_panel("Festival Snapshot"):
         <div class="festival-card hover-card" style="background-color: #FAFAFA; border: 2px solid #8d6e63; border-radius: 10px; overflow: hidden; font-family: sans-serif; color: #8d6e63;">
             <div style="background-color: #8d6e63; color: white; padding: 0.8rem 1.2rem; font-size: 1.3rem; font-weight: bold;">🍷 와인페스타</div>
             <div style="height: 160px; display: flex; align-items: center; justify-content: center; border-bottom: 2px solid #8d6e63;">
-                <img src="/wine.jpg" style="width: 100%; height: 100%; object-fit: cover;">
+                <img src="wine.jpg" style="width: 100%; height: 100%; object-fit: cover;">
             </div>
             <div style="display: flex; border-bottom: 2px solid #8d6e63;">
                 <div style="flex: 1; display: flex; flex-direction: column; border-right: 2px solid #8d6e63;">
@@ -139,7 +139,7 @@ with ui.nav_panel("Festival Snapshot"):
         <div class="festival-card hover-card" style="background-color: #FAFAFA; border: 2px solid #745D8E; border-radius: 10px; overflow: hidden; font-family: sans-serif; color: #745D8E;">
             <div style="background-color: #745D8E; color: white; padding: 0.8rem 1.2rem; font-size: 1.3rem; font-weight: bold;">🌌 별빛축제</div>
             <div style="height: 160px; display: flex; align-items: center; justify-content: center; border-bottom: 2px solid #745D8E;">
-                <img src="/starlight.jpg" style="width: 100%; height: 100%; object-fit: cover;">
+                <img src="starlight.jpg" style="width: 100%; height: 100%; object-fit: cover;">
             </div>
             <div style="display: flex; border-bottom: 2px solid #745D8E;">
                 <div style="flex: 1; display: flex; flex-direction: column; border-right: 2px solid #745D8E;">

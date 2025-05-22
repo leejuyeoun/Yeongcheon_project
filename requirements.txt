@@ -6,3 +6,4 @@ shinywidgets
 plotly
 shiny
 openpyxl
+shinyswatch
