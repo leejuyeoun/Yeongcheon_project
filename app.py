@@ -32,10 +32,8 @@ df_info_display = df_info_fixed.drop_duplicates(subset="축제명")[
 ].reset_index(drop=True)
 
 
-with ui.nav_panel("Overview"):
+with ui.nav_panel("OverView"):
     ui.h2(" 축제 한눈에 보기", style="margin-bottom: 2rem;")
-
-# ▶ Festival Snapshot 패널 안 CSS 정의 부분에서 다음 내용 추가
 
     ui.HTML("""
     <style>
@@ -47,8 +45,6 @@ with ui.nav_panel("Overview"):
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
             cursor: pointer;
         }
-
-        /* ✅ 수정된 부분: hover-button 스타일 정의 */
         .hover-button {
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
@@ -67,7 +63,7 @@ with ui.nav_panel("Overview"):
 
             cards.forEach(function(card, index) {
                 card.addEventListener("click", function() {
-                    Shiny.setInputValue("__nav_festival_snapshot__", "Stats View", {priority: "event"});
+                    Shiny.setInputValue("__nav_festival_snapshot__", "Festival Infra", {priority: "event"});
                     setTimeout(function () {
                         const dropdown = document.querySelector('select#selected_festival');
                         if (dropdown) {
@@ -81,69 +77,42 @@ with ui.nav_panel("Overview"):
     </script>
     """)
 
-
     with ui.layout_columns(gap="2rem", col_widths=(4, 4, 4)):
-
-        # ✅ 작약꽃축제 카드 - 최종 간소화 버전
-        ui.HTML("""
-        <div class="festival-card hover-card" style="background-color: #FAFAFA; border: 2px solid #DB6C7E; border-radius: 10px; overflow: hidden; font-family: sans-serif; color: #DB6C7E;">
-            
-            <!-- 제목 헤더 -->
+        ui.HTML("""<div class="festival-card hover-card" style="background-color: #FAFAFA; border: 2px solid #DB6C7E; border-radius: 10px; overflow: hidden; font-family: sans-serif; color: #DB6C7E;">
             <div style="background-color: #DB6C7E; color: white; padding: 0.8rem 1.2rem; font-size: 1.3rem; font-weight: bold;">
                 작약꽃축제
             </div>
-
-            <!-- 상단 이미지 -->
             <div style="height: 300px; border-bottom: 2px solid #DB6C7E;">
                 <img src="peony.jpg" alt="작약꽃축제" style="width: 100%; height: 100%; object-fit: cover;">
             </div>
-
-            <!-- 설명 이미지 추가 -->
             <div style="display: flex; align-items: center; justify-content: center;">
                 <img src="peonyinfo.jpg" style="width: 100%; object-fit: contain;">
             </div>
+        </div>""")
 
-        </div>
-        """)
+        ui.HTML("""<div class="festival-card hover-card" style="background-color: #FAFAFA; border: 2px solid #8d6e63; border-radius: 10px; overflow: hidden; font-family: sans-serif; color: #8d6e63;">
+            <div style="background-color: #8d6e63; color: white; padding: 0.8rem 1.2rem; font-size: 1.3rem; font-weight: bold;">
+                와인페스타
+            </div>
+            <div style="height: 300px; border-bottom: 2px solid #8d6e63;">
+                <img src="wine.jpg" alt="와인페스타" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+            <div>
+                <img src="wineinfo.jpg" alt="와인페스타 정보" style="width: 100%; object-fit: contain;">
+            </div>
+        </div>""")
 
-        # ✅ 와인페스타 카드
-        ui.HTML("""
-        <div class="festival-card hover-card" style="background-color: #FAFAFA; border: 2px solid #8d6e63; border-radius: 10px; overflow: hidden; font-family: sans-serif; color: #8d6e63;">
-        <div style="background-color: #8d6e63; color: white; padding: 0.8rem 1.2rem; font-size: 1.3rem; font-weight: bold;">
-            와인페스타
-        </div>
-        <div style="height: 300px; border-bottom: 2px solid #8d6e63;">
-            <img src="wine.jpg" alt="와인페스타" style="width: 100%; height: 100%; object-fit: cover;">
-        </div>
-        <div>
-            <img src="wineinfo.jpg" alt="와인페스타 정보" style="width: 100%; object-fit: contain;">
-        </div>
-        </div>
-        """)
-
-
-        # ✅ 별빛축제 카드
-        ui.HTML("""
-        <div class="festival-card hover-card" style="background-color: #FAFAFA; border: 2px solid #745D8E; border-radius: 10px; overflow: hidden; font-family: sans-serif; color: #745D8E;">
-        <div style="background-color: #745D8E; color: white; padding: 0.8rem 1.2rem; font-size: 1.3rem; font-weight: bold;">
-            별빛축제
-        </div>
-        <div style="height:300px; border-bottom: 2px solid #745D8E;">
-            <img src="starlight.jpg" alt="별빛축제" style="width: 100%; height: 100%; object-fit: cover;">
-        </div>
-        <div>
-            <img src="starlightinfo.jpg" alt="별빛축제 정보" style="width: 100%; object-fit: contain;">
-        </div>
-        </div>
-        """)
-
-
-
-
-
-
-
-    # ▶ '유사 축제와 비교하기' 버튼 부분 전체 수정본
+        ui.HTML("""<div class="festival-card hover-card" style="background-color: #FAFAFA; border: 2px solid #745D8E; border-radius: 10px; overflow: hidden; font-family: sans-serif; color: #745D8E;">
+            <div style="background-color: #745D8E; color: white; padding: 0.8rem 1.2rem; font-size: 1.3rem; font-weight: bold;">
+                별빛축제
+            </div>
+            <div style="height:300px; border-bottom: 2px solid #745D8E;">
+                <img src="starlight.jpg" alt="별빛축제" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+            <div>
+                <img src="starlightinfo.jpg" alt="별빛축제 정보" style="width: 100%; object-fit: contain;">
+            </div>
+        </div>""")
 
     with ui.div(style="display: flex; justify-content: center; margin-top: 2rem;"):
         ui.input_action_button(
@@ -156,14 +125,12 @@ with ui.nav_panel("Overview"):
             )
         )
 
-
-    # ▶ JS 코드: 카드 클릭 시 Stats View 이동
     ui.HTML("""
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             document.querySelectorAll(".hover-card").forEach(function(card) {
                 card.addEventListener("click", function() {
-                    const tab = document.querySelector('a[data-value="Stats View"]');
+                    const tab = document.querySelector('a[data-value="Festival Infra"]');
                     if (tab) tab.click();
                 });
             });
@@ -171,21 +138,21 @@ with ui.nav_panel("Overview"):
     </script>
     """)
 
-    # ▶ JS 코드: 버튼 클릭 시 Map View 이동 및 포커스 해제
     ui.HTML("""
     <script>
         setTimeout(function() {
             const btn = document.getElementById("compare_button");
             if (btn) {
                 btn.onclick = function() {
-                    const tab = document.querySelector('a[data-value="Map View"]');
+                    const tab = document.querySelector('a[data-value="Festival Compare"]');
                     if (tab) tab.click();
-                    btn.blur(); // 포커스 해제
+                    btn.blur();
                 };
             }
         }, 300);
     </script>
     """)
+
 
 
 
@@ -601,6 +568,61 @@ with ui.nav_panel("Festival Infra"):
     축제_목록 = sorted(df_stats["축제명"].dropna().unique().tolist())
     숙소_세부 = sorted(df_stats[df_stats["구분1"] == "숙소"]["구분2"].dropna().unique().tolist())
     식당_세부 = sorted(df_stats[df_stats["구분1"] == "식당"]["구분2"].dropna().unique().tolist())
+
+# ✅ 버튼 추가 (오른쪽 정렬)
+    with ui.div(
+        style="display: flex; justify-content: flex-end; margin: -0.3rem 0 0.5rem 0;"
+    ):
+        ui.input_action_button(
+            id="go_to_map_from_stats",
+            label="유사 축제와 비교하기",
+            class_="btn btn-lg",
+            style=(
+                "font-size: 15px; padding: 0.6rem 1.2rem; "
+                "border-radius: 10px; font-weight: bold; "
+                "background-color: #5a7dad; color: white; border: none;"
+            )
+        )
+
+    # ✅ 탭 이동 JS 코드 (Map View → Festival Compare로 변경)
+    ui.HTML("""
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const btn = document.getElementById("go_to_map_from_stats");
+        if (btn) {
+            btn.onclick = function () {
+                const selected = document.querySelector('select#selected_festival')?.value;
+
+                const tab = document.querySelector('a[data-value="Festival Compare"]');
+                if (tab) tab.click();
+
+                setTimeout(function () {
+                    const leftDropdown = document.querySelector('select#left_festival');
+                    const rightDropdown = document.querySelector('select#right_festival');
+                    if (!leftDropdown || !rightDropdown) return;
+
+                    if (["별빛축제", "우주항공축제"].includes(selected)) {
+                        leftDropdown.value = "별빛축제";
+                        rightDropdown.value = "우주항공축제";
+                    } else if (["와인페스타", "오미자축제"].includes(selected)) {
+                        leftDropdown.value = "와인페스타";
+                        rightDropdown.value = "오미자축제";
+                    } else if (
+                        ["작약꽃축제A", "작약꽃축제B", "작약꽃축제C", "작약꽃축제(A/B/C)", "벚꽃축제"].includes(selected)
+                    ) {
+                        leftDropdown.value = "작약꽃축제";
+                        rightDropdown.value = "벚꽃축제";
+                    }
+
+                    leftDropdown.dispatchEvent(new Event("change", { bubbles: true }));
+                    rightDropdown.dispatchEvent(new Event("change", { bubbles: true }));
+                }, 500);
+            };
+        }
+    });
+    </script>
+    """)
+
 
     # ✅ 사이드바 및 본문 레이아웃
     with ui.layout_sidebar():
