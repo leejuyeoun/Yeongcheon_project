@@ -4,6 +4,7 @@ import plotly.express as px
 import pathlib
 import pandas as pd
 from plotly import graph_objects as go
+from shiny import reactive
 
 # 데이터 로드
 from shared import df_info, df_compare, df_infra_summary, df_bar_long, df_infra_combined, df_stats, df_infra_merged
@@ -356,9 +357,153 @@ with ui.nav_panel("Overview"):
             """)
 
 
+
 with ui.nav_panel("Map View"):
-    ui.h4("유사 축제 인프라 비교", style="margin-top: 1rem; color: #444;")
+    # ✅ 제목 + 버튼을 같은 줄에 배치
+    with ui.layout_columns(col_widths=(5, 2, 2, 2)):  # 제목:5, 버튼3개
+        ui.h4("유사 축제 인프라 비교", style="margin-top: 1rem; color: #444;")
+
+        ui.input_action_button("btn1", "작약꽃 vs 벚꽃")
+        ui.input_action_button("btn2", "와인 vs 오미자")
+        ui.input_action_button("btn3", "별빛 vs 우주항공")
+
+        # 🌸 작약꽃 vs 벚꽃
+        @reactive.effect
+        @reactive.event(input.btn1)
+        def _():
+            m = ui.modal(
+                ui.markdown("""
+                <style>
+                    table.custom-table {
+                        width: 100%;
+                        border-collapse: collapse;
+                        margin-top: 1em;
+                    }
+                    .custom-table th, .custom-table td {
+                        padding: 10px 15px;
+                        text-align: left;
+                        vertical-align: top;
+                    }
+                    .custom-table th {
+                        white-space: nowrap;
+                    }
+                </style>
+
+                <table class="custom-table">
+                  <thead>
+                    <tr>
+                      <th>항목 </th>
+                      <th>작약꽃축제 (영천)</th>
+                      <th>벚꽃축제 (옥정호)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>시기</td><td>5월 중순</td><td>4월 초</td></tr>
+                    <tr><td>장소</td><td>보현산 자락</td><td>옥정호 출렁다리 앞</td></tr>
+                    <tr><td>특성</td><td>약초·작약 체험 중심</td><td>수변 경관 감상 중심</td></tr>
+                    <tr><td>인프라 </td><td>소규모 숙소, 한약재 음식</td><td>숙소 확충 중, 특산물 먹거리</td></tr>
+                    <tr><td>접근성 </td><td>자가용 권장, 주차장 있음</td><td>대중교통 가능, 주차장 있음</td></tr>
+                  </tbody>
+                </table>
+                """),
+                    easy_close=True,
+                    footer=None,
+                    class_="modal-xl"
+            )
+            ui.modal_show(m)
+
+        # 🍷 와인 vs 오미자
+        @reactive.effect
+        @reactive.event(input.btn2)
+        def _():
+            m = ui.modal(
+                ui.markdown("""
+                <style>
+                    table.custom-table {
+                        width: 100%;
+                        border-collapse: collapse;
+                        margin-top: 1em;
+                    }
+                    .custom-table th, .custom-table td {
+                        padding: 10px 15px;
+                        text-align: left;
+                        vertical-align: top;
+                    }
+                    .custom-table th {
+                        white-space: nowrap;
+                    }
+                </style>
+                
+                <table class="custom-table">
+                  <thead>
+                    <tr>
+                      <th>항목</th>
+                      <th>와인페스타 (영천)</th>
+                      <th>오미자축제 (문경)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>시기</td><td>10월 중순</td><td>9월 중순</td></tr>
+                    <tr><td>장소</td><td>영천강변공원</td><td>문경 금천둔치</td></tr>
+                    <tr><td>특성</td><td>포도 와인 산업 중심</td><td>전국 최대 오미자 생산지</td></tr>
+                    <tr><td>프로그램</td><td>와인 체험·공연</td><td>오미자 체험·공연</td></tr>
+                    <tr><td>인프라</td><td>다양한 숙소, 음식점 운영</td><td>숙소·자연휴양림 활용, 향토음식</td></tr>
+                  </tbody>
+                </table>
+                """),
+                    easy_close=True,
+                    footer=None,
+                    class_="modal-xl"
+            )
+            ui.modal_show(m)
+
+        # 🌌 별빛 vs 우주항공
+        @reactive.effect
+        @reactive.event(input.btn3)
+        def _():
+            m = ui.modal(
+                ui.markdown("""
+                <style>
+                    table.custom-table {
+                        width: 100%;
+                        border-collapse: collapse;
+                        margin-top: 1em;
+                    }
+                    .custom-table th, .custom-table td {
+                        padding: 10px 15px;
+                        text-align: left;
+                        vertical-align: top;
+                    }
+                    .custom-table th {
+                        white-space: nowrap;
+                    }
+                </style>
+
+                <table class="custom-table">
+                  <thead>
+                    <tr>
+                      <th>항목</th>
+                      <th>별빛축제 (영천)</th>
+                      <th>우주항공축제 (고흥)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>시기</td><td>10월 초</td><td>5월 초</td></tr>
+                    <tr><td>장소</td><td>보현산 천문과학관</td><td>나로우주센터 우주과학관</td></tr>
+                    <tr><td>특성</td><td>천문학 체험 중심</td><td>우주항공 산업 체험 중심</td></tr>
+                    <tr><td>프로그램</td><td>관측, 강연, 체험</td><td>전시, 우주복 체험 등 다양</td></tr>
+                    <tr><td>인프라</td><td>다양한 숙소·먹거리 제공</td><td>숙소·음식 다양, 바지락 활용</td></tr>
+                  </tbody>
+                </table>
+                """),
+                    easy_close=True,
+                    footer=None,
+                    class_="modal-xl"
+                )
+            ui.modal_show(m)
+
     ui.p("아래에서 두 개의 축제를 선택하고 위치 및 인프라를 비교하세요.", style="font-size: 15px; color: #666;")
+
 
     # 축제 선택 필터
     with ui.layout_columns(col_widths=(6, 6)):
@@ -444,6 +589,7 @@ with ui.nav_panel("Map View"):
                     @render.express
                     def vb8():
                         f"{infra_summary(input.right_festival())[3]}개"
+
 
 
     # 세부 유형 막대그래프
