@@ -191,7 +191,7 @@ with ui.nav_panel("Overview"):
 
 
 
-with ui.nav_panel("Map View"):
+with ui.nav_panel("Festival Compare"):
     # ✅ 제목 + 버튼을 같은 줄에 배치
     with ui.layout_columns(col_widths=(5, 2, 2, 2)):  # 제목:5, 버튼3개
         ui.h4("유사 축제 인프라 비교", style="margin-top: 1rem; color: #444;")
@@ -254,42 +254,44 @@ with ui.nav_panel("Map View"):
         def _():
             m = ui.modal(
                 ui.markdown("""
-                <style>
-                    table.custom-table {
-                        width: 100%;
-                        border-collapse: collapse;
-                        margin-top: 1em;
-                    }
-                    .custom-table th, .custom-table td {
-                        padding: 10px 15px;
-                        text-align: left;
-                        vertical-align: top;
-                    }
-                    .custom-table th {
-                        white-space: nowrap;
-                    }
-                </style>
-                
-                <table class="custom-table">
-                  <thead>
-                    <tr>
-                      <th>항목</th>
-                      <th>와인페스타 (영천)</th>
-                      <th>오미자축제 (문경)</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr><td>시기</td><td>10월 중순</td><td>9월 중순</td></tr>
-                    <tr><td>장소</td><td>영천강변공원</td><td>문경 금천둔치</td></tr>
-                    <tr><td>특성</td><td>포도 와인 산업 중심</td><td>전국 최대 오미자 생산지</td></tr>
-                    <tr><td>프로그램</td><td>와인 체험·공연</td><td>오미자 체험·공연</td></tr>
-                    <tr><td>인프라</td><td>다양한 숙소, 음식점 운영</td><td>숙소·자연휴양림 활용, 향토음식</td></tr>
-                  </tbody>
-                </table>
+        <style>
+            table.custom-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 1em;
+            }
+            .custom-table th, .custom-table td {
+                padding: 10px 15px;
+                text-align: left;
+                vertical-align: top;
+            }
+            .custom-table th {
+                white-space: nowrap;
+            }
+        </style>
+
+        <table class="custom-table">
+          <thead>
+            <tr>
+              <th>항목</th>
+              <th>와인페스타 (영천)</th>
+              <th>오미자축제 (문경)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>시기</td><td>10월</td><td>9월</td></tr>
+            <tr><td>기간</td><td>2일</td><td>3일</td></tr>
+            <tr><td>총방문객</td><td>40,000명</td><td>50,000명</td></tr>
+            <tr><td>일일평균</td><td>20,000명</td><td>16,667명</td></tr>
+            <tr><td>지역특징</td><td>시내 중심</td><td>시골 변방</td></tr>
+            <tr><td>인프라</td><td>인프라 풍부</td><td>먹거리 부족</td></tr>
+          </tbody>
+        </table>
                 """),
-                    easy_close=True,
-                    footer=None,
-                    class_="modal-xl"
+                title="와인페스타 vs 오미자축제 비교",
+                easy_close=True,
+                footer=None,
+                class_="modal-xl"
             )
             ui.modal_show(m)
 
@@ -299,43 +301,45 @@ with ui.nav_panel("Map View"):
         def _():
             m = ui.modal(
                 ui.markdown("""
-                <style>
-                    table.custom-table {
-                        width: 100%;
-                        border-collapse: collapse;
-                        margin-top: 1em;
-                    }
-                    .custom-table th, .custom-table td {
-                        padding: 10px 15px;
-                        text-align: left;
-                        vertical-align: top;
-                    }
-                    .custom-table th {
-                        white-space: nowrap;
-                    }
-                </style>
+        <style>
+            table.custom-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 1em;
+            }
+            .custom-table th, .custom-table td {
+                padding: 10px 15px;
+                text-align: left;
+                vertical-align: top;
+            }
+            .custom-table th {
+                white-space: nowrap;
+            }
+        </style>
 
-                <table class="custom-table">
-                  <thead>
-                    <tr>
-                      <th>항목</th>
-                      <th>별빛축제 (영천)</th>
-                      <th>우주항공축제 (고흥)</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr><td>시기</td><td>10월 초</td><td>5월 초</td></tr>
-                    <tr><td>장소</td><td>보현산 천문과학관</td><td>나로우주센터 우주과학관</td></tr>
-                    <tr><td>특성</td><td>천문학 체험 중심</td><td>우주항공 산업 체험 중심</td></tr>
-                    <tr><td>프로그램</td><td>관측, 강연, 체험</td><td>전시, 우주복 체험 등 다양</td></tr>
-                    <tr><td>인프라</td><td>다양한 숙소·먹거리 제공</td><td>숙소·음식 다양, 바지락 활용</td></tr>
-                  </tbody>
-                </table>
+        <table class="custom-table">
+          <thead>
+            <tr>
+              <th>항목</th>
+              <th>별빛축제 (영천)</th>
+              <th>우주항공축제 (고흥)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>시기</td><td>10월</td><td>5월</td></tr>
+            <tr><td>기간</td><td>3일</td><td>4일</td></tr>
+            <tr><td>총방문객</td><td>60,000명</td><td>120,000명</td></tr>
+            <tr><td>일일평균</td><td>20,000명</td><td>30,000명</td></tr>
+            <tr><td>지역특징</td><td>보현산 정상</td><td>반도</td></tr>
+            <tr><td>인프라</td><td>숙소/식당 부족</td><td>인프라 풍부</td></tr>
+          </tbody>
+        </table>
                 """),
-                    easy_close=True,
-                    footer=None,
-                    class_="modal-xl"
-                )
+                title="별빛축제 vs 우주항공축제 비교",
+                easy_close=True,
+                footer=None,
+                class_="modal-xl"
+            )
             ui.modal_show(m)
 
     ui.p("아래에서 두 개의 축제를 선택하고 위치 및 인프라를 비교하세요.", style="font-size: 15px; color: #666;")
@@ -592,7 +596,7 @@ with ui.nav_panel("Map View"):
 
 
 
-with ui.nav_panel("Stats View"):
+with ui.nav_panel("Festival Infra"):
     # ✅ 데이터 로딩
     축제_목록 = sorted(df_stats["축제명"].dropna().unique().tolist())
     숙소_세부 = sorted(df_stats[df_stats["구분1"] == "숙소"]["구분2"].dropna().unique().tolist())
