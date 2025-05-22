@@ -84,80 +84,59 @@ with ui.nav_panel("Overview"):
 
     with ui.layout_columns(gap="2rem", col_widths=(4, 4, 4)):
 
-        # ✅ 작약꽃축제 카드
+        # ✅ 작약꽃축제 카드 - 최종 간소화 버전
         ui.HTML("""
         <div class="festival-card hover-card" style="background-color: #FAFAFA; border: 2px solid #DB6C7E; border-radius: 10px; overflow: hidden; font-family: sans-serif; color: #DB6C7E;">
-            <div style="background-color: #DB6C7E; color: white; padding: 0.8rem 1.2rem; font-size: 1.3rem; font-weight: bold;">🌸 작약꽃축제</div>
-            <div style="height: 160px; display: flex; align-items: center; justify-content: center; border-bottom: 2px solid #DB6C7E;">
-                <img src="peony.jpg" style="width: 100%; height: 100%; object-fit: cover;">
+            
+            <!-- 제목 헤더 -->
+            <div style="background-color: #DB6C7E; color: white; padding: 0.8rem 1.2rem; font-size: 1.3rem; font-weight: bold;">
+                작약꽃축제
             </div>
-            <div style="display: flex; border-bottom: 2px solid #DB6C7E;">
-                <div style="flex: 1; display: flex; flex-direction: column; border-right: 2px solid #DB6C7E;">
-                    <div style="flex: 2; padding: 1rem; font-weight: bold;">숙소: 32개<br>식당: 80개<br>주차장: 9개<br>화장실: 22개</div>
-                    <div style="flex: 1; padding: 0.8rem; border-top: 2px solid #DB6C7E;">한약축제와 연계 / 분산형 개최</div>
-                </div>
-                <div style="flex: 1; padding: 1rem;">한방·자연 테마 복합 이벤트</div>
+
+            <!-- 상단 이미지 -->
+            <div style="height: 300px; border-bottom: 2px solid #DB6C7E;">
+                <img src="peony.jpg" alt="작약꽃축제" style="width: 100%; height: 100%; object-fit: cover;">
             </div>
-            <div style="display: flex; border-bottom: 2px solid #DB6C7E;">
-                <div style="flex: 1; padding: 1rem; border-right: 2px solid #DB6C7E;">
-                    총 방문객 5만 명<br>
-                    <span style="color: #DB6C7E; font-size: 1.2rem; font-weight: bold;">1일 방문객 7천 명</span>
-                </div>
-                <div style="flex: 3; padding: 1rem;">유사축제: 옥정호 벚꽃축제</div>
+
+            <!-- 설명 이미지 추가 -->
+            <div style="display: flex; align-items: center; justify-content: center;">
+                <img src="peonyinfo.jpg" style="width: 100%; object-fit: contain;">
             </div>
-            <div style="padding: 1rem; background-color: #FAFAFA;"><strong>경관 우수하나 교통 및 주차 인프라 부족</strong></div>
+
         </div>
         """)
 
         # ✅ 와인페스타 카드
         ui.HTML("""
         <div class="festival-card hover-card" style="background-color: #FAFAFA; border: 2px solid #8d6e63; border-radius: 10px; overflow: hidden; font-family: sans-serif; color: #8d6e63;">
-            <div style="background-color: #8d6e63; color: white; padding: 0.8rem 1.2rem; font-size: 1.3rem; font-weight: bold;">🍷 와인페스타</div>
-            <div style="height: 160px; display: flex; align-items: center; justify-content: center; border-bottom: 2px solid #8d6e63;">
-                <img src="wine.jpg" style="width: 100%; height: 100%; object-fit: cover;">
-            </div>
-            <div style="display: flex; border-bottom: 2px solid #8d6e63;">
-                <div style="flex: 1; display: flex; flex-direction: column; border-right: 2px solid #8d6e63;">
-                    <div style="flex: 2; padding: 1rem; font-weight: bold;">숙소: 82개<br>식당: 1,485개<br>주차장: 122개<br>화장실: 158개</div>
-                    <div style="flex: 1; padding: 0.8rem; border-top: 2px solid #8d6e63;">한우축제와 연계 / 도심 개최</div>
-                </div>
-                <div style="flex: 1; padding: 1rem;">도심형 와인 특산물 중심 축제</div>
-            </div>
-            <div style="display: flex; border-bottom: 2px solid #8d6e63;">
-                <div style="flex: 1; padding: 1rem; border-right: 2px solid #8d6e63;">
-                    총 방문객 4만 명<br>
-                    <span style="color: #8d6e63; font-size: 1.2rem; font-weight: bold;">1일 방문객 2만 명</span>
-                </div>
-                <div style="flex: 3; padding: 1rem;">유사축제: 문경 오미자축제</div>
-            </div>
-            <div style="padding: 1rem; background-color: #FAFAFA;"><strong>도심 기반으로 수용력 및 접근성 우수</strong></div>
+        <div style="background-color: #8d6e63; color: white; padding: 0.8rem 1.2rem; font-size: 1.3rem; font-weight: bold;">
+            와인페스타
+        </div>
+        <div style="height: 300px; border-bottom: 2px solid #8d6e63;">
+            <img src="wine.jpg" alt="와인페스타" style="width: 100%; height: 100%; object-fit: cover;">
+        </div>
+        <div>
+            <img src="wineinfo.jpg" alt="와인페스타 정보" style="width: 100%; object-fit: contain;">
+        </div>
         </div>
         """)
+
 
         # ✅ 별빛축제 카드
         ui.HTML("""
         <div class="festival-card hover-card" style="background-color: #FAFAFA; border: 2px solid #745D8E; border-radius: 10px; overflow: hidden; font-family: sans-serif; color: #745D8E;">
-            <div style="background-color: #745D8E; color: white; padding: 0.8rem 1.2rem; font-size: 1.3rem; font-weight: bold;">🌌 별빛축제</div>
-            <div style="height: 160px; display: flex; align-items: center; justify-content: center; border-bottom: 2px solid #745D8E;">
-                <img src="starlight.jpg" style="width: 100%; height: 100%; object-fit: cover;">
-            </div>
-            <div style="display: flex; border-bottom: 2px solid #745D8E;">
-                <div style="flex: 1; display: flex; flex-direction: column; border-right: 2px solid #745D8E;">
-                    <div style="flex: 2; padding: 1rem; font-weight: bold;">숙소: 24개<br>식당: 25개<br>주차장: 6개<br>화장실: 16개</div>
-                    <div style="flex: 1; padding: 0.8rem; border-top: 2px solid #745D8E;">보현산 정상 개최 / 캠핑장 연계</div>
-                </div>
-                <div style="flex: 1; padding: 1rem;">천문대 연계 야간 체험형 축제</div>
-            </div>
-            <div style="display: flex; border-bottom: 2px solid #745D8E;">
-                <div style="flex: 1; padding: 1rem; border-right: 2px solid #745D8E;">
-                    총 방문객 6만 명<br>
-                    <span style="color: #745D8E; font-size: 1.2rem; font-weight: bold;">1일 방문객 2만 명</span>
-                </div>
-                <div style="flex: 3; padding: 1rem;">유사축제: 고흥 항공우주축제</div>
-            </div>
-            <div style="padding: 1rem; background-color: #FAFAFA;"><strong>숙박 부족 및 야간 교통 대응이 과제로 남음</strong></div>
+        <div style="background-color: #745D8E; color: white; padding: 0.8rem 1.2rem; font-size: 1.3rem; font-weight: bold;">
+            별빛축제
+        </div>
+        <div style="height:300px; border-bottom: 2px solid #745D8E;">
+            <img src="starlight.jpg" alt="별빛축제" style="width: 100%; height: 100%; object-fit: cover;">
+        </div>
+        <div>
+            <img src="starlightinfo.jpg" alt="별빛축제 정보" style="width: 100%; object-fit: contain;">
+        </div>
         </div>
         """)
+
 
 
 
@@ -207,6 +186,8 @@ with ui.nav_panel("Overview"):
         }, 300);
     </script>
     """)
+
+
 
 
 
