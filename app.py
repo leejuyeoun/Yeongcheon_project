@@ -7,7 +7,7 @@ from plotly import graph_objects as go
 from shiny import reactive
 
 from shinyswatch import theme
-ui.page_opts(title="영천시 축제 대시보드", theme=theme.lux, fillable=False)
+ui.page_opts(title="영천시 축제 인프라 분석", theme=theme.minty, fillable=False)
 
 # 데이터 로드
 from shared import df_info, df_compare, df_infra_summary, df_bar_long, df_infra_combined, df_stats, df_infra_merged
@@ -206,44 +206,47 @@ with ui.nav_panel("Map View"):
         def _():
             m = ui.modal(
                 ui.markdown("""
-                <style>
-                    table.custom-table {
-                        width: 100%;
-                        border-collapse: collapse;
-                        margin-top: 1em;
-                    }
-                    .custom-table th, .custom-table td {
-                        padding: 10px 15px;
-                        text-align: left;
-                        vertical-align: top;
-                    }
-                    .custom-table th {
-                        white-space: nowrap;
-                    }
-                </style>
+        <style>
+            table.custom-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 1em;
+            }
+            .custom-table th, .custom-table td {
+                padding: 10px 15px;
+                text-align: left;
+                vertical-align: top;
+            }
+            .custom-table th {
+                white-space: nowrap;
+            }
+        </style>
 
-                <table class="custom-table">
-                  <thead>
-                    <tr>
-                      <th>항목 </th>
-                      <th>작약꽃축제 (영천)</th>
-                      <th>벚꽃축제 (옥정호)</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr><td>시기</td><td>5월 중순</td><td>4월 초</td></tr>
-                    <tr><td>장소</td><td>보현산 자락</td><td>옥정호 출렁다리 앞</td></tr>
-                    <tr><td>특성</td><td>약초·작약 체험 중심</td><td>수변 경관 감상 중심</td></tr>
-                    <tr><td>인프라 </td><td>소규모 숙소, 한약재 음식</td><td>숙소 확충 중, 특산물 먹거리</td></tr>
-                    <tr><td>접근성 </td><td>자가용 권장, 주차장 있음</td><td>대중교통 가능, 주차장 있음</td></tr>
-                  </tbody>
-                </table>
+        <table class="custom-table">
+          <thead>
+            <tr>
+              <th>항목</th>
+              <th>작약꽃축제 (영천)</th>
+              <th>벚꽃축제 (옥정호)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>시기</td><td>5월</td><td>4월</td></tr>
+            <tr><td>기간</td><td>7일</td><td>2일</td></tr>
+            <tr><td>총방문객</td><td>50,000명</td><td>35,000명</td></tr>
+            <tr><td>일일평균</td><td>7,143명</td><td>17,500명</td></tr>
+            <tr><td>지역특징</td><td>대구 근교</td><td>옥정호(아름다운 길 100선 선정)</td></tr>
+            <tr><td>인프라</td><td>푸드트럭/행사 미운행</td><td>먹거리 풍부/행사 진행</td></tr>
+          </tbody>
+        </table>
                 """),
-                    easy_close=True,
-                    footer=None,
-                    class_="modal-xl"
+                title="작약꽃축제 vs 벚꽃축제 비교",
+                easy_close=True,
+                footer=None,
+                class_="modal-xl"
             )
             ui.modal_show(m)
+
 
         # 🍷 와인 vs 오미자
         @reactive.effect
@@ -341,7 +344,7 @@ with ui.nav_panel("Map View"):
     # 축제 선택 필터
     with ui.layout_columns(col_widths=(6, 6)):
         with ui.card():
-            ui.h5("왼쪽 축제 선택", style="color: #333;")
+            ui.h5("영천 축제 선택", style="color: #333;")
             ui.input_select("left_festival", "왼쪽 지도: 축제를 선택하세요", list(축제_파일_매핑.keys()), selected="작약꽃축제")
         # 🔵 왼쪽 축제의 방문객 수 출력
             @render.text
@@ -360,7 +363,7 @@ with ui.nav_panel("Map View"):
                     return "일일 평균 방문객 수: 정보 없음"
                 
         with ui.card():
-            ui.h5("오른쪽 축제 선택", style="color: #333;")
+            ui.h5("비교 축제 선택", style="color: #333;")
             ui.input_select("right_festival", "오른쪽 지도: 축제를 선택하세요", list(축제_파일_매핑.keys()), selected="벚꽃축제")
             # 🔵 오른쪽쪽 축제의 방문객 수 출력
             @render.text
@@ -382,7 +385,7 @@ with ui.nav_panel("Map View"):
     # 지도 및 인프라 요약 정보
     with ui.layout_columns(col_widths=(6, 6)):
         with ui.card():
-            ui.h5("왼쪽 축제 위치 지도")
+            ui.h5("영천 축제 위치 지도")
             @render.ui
             def map_left():
                 filename = 축제_파일_매핑[input.left_festival()]
@@ -423,7 +426,7 @@ with ui.nav_panel("Map View"):
                         f"{infra_summary(input.left_festival())[3]}개"
 
         with ui.card():
-            ui.h5("오른쪽 축제 위치 지도")
+            ui.h5("비교 축제 위치 지도")
             @render.ui
             def map_right():
                 filename = 축제_파일_매핑[input.right_festival()]
@@ -454,12 +457,57 @@ with ui.nav_panel("Map View"):
                     def vb8():
                         f"{infra_summary(input.right_festival())[3]}개"
 
-
-
+    with ui.layout_columns(col_widths=(12,)):
+        with ui.card():
+            ui.h5("주요 인프라 항목 수 비교", style="margin-top: 1rem;")
+            @render_plotly
+            def infra_compare_bar():
+                left = input.left_festival()
+                right = input.right_festival()
+                df = df_infra_merged.copy()
+                df = df[df["구분1"].isin(["숙소", "식당", "화장실", "주차장"])]
+    
+                # 요약 데이터프레임 생성
+                summary = df[df["축제명"].str.contains(left, na=False)].groupby("구분1").size().reset_index(name=left)
+                summary2 = df[df["축제명"].str.contains(right, na=False)].groupby("구분1").size().reset_index(name=right)
+                merged = pd.merge(summary, summary2, on="구분1", how="outer").fillna(0)
+    
+                df_plot = pd.melt(merged, id_vars="구분1", var_name="축제명", value_name="개수")
+    
+                fig = px.bar(
+                    df_plot,
+                    x="구분1",
+                    y="개수",
+                    color="축제명",
+                    barmode="group",
+                    text="개수",  # ✅ 막대 위 텍스트 표시
+                    color_discrete_sequence=px.colors.qualitative.Pastel
+                )
+    
+                # ✅ 전체 레이아웃 조정 (폰트 크기 포함)
+                fig.update_traces(textposition="outside")
+                fig.update_layout(
+                    height=450,
+                    xaxis_title="인프라 유형",  # ✅ x축 제목 변경
+                    font=dict(size=16),       # ✅ 전체 글자 크기 키우기
+                    legend_title_font=dict(size=16),
+                    xaxis=dict(tickfont=dict(size=14)),
+                    yaxis=dict(tickfont=dict(size=14)),
+                    margin=dict(l=40, r=40, t=40, b=40),
+                    legend=dict(
+                        orientation="h",
+                        yanchor="bottom",
+                        y=1.05,
+                        xanchor="center",
+                        x=0.5
+                    )
+                )
+                return fig
+        
     # 세부 유형 막대그래프
     with ui.layout_columns(col_widths=[6, 6]):  # ✅ 카드 너비 균등 조절
         with ui.card():
-            ui.h5("왼쪽 축제 인프라 세부 유형")
+            ui.h5("영천 축제 인프라 세부 유형")
             @render_plotly
             def bar_left():
                 df = df_infra_merged[df_infra_merged["축제명"].str.contains(input.left_festival(), na=False)]
@@ -496,7 +544,7 @@ with ui.nav_panel("Map View"):
                 return fig
 
         with ui.card():
-            ui.h5("오른쪽 축제 인프라 세부 유형")
+            ui.h5("비교 축제 인프라 세부 유형")
             @render_plotly
             def bar_right():
                 df = df_infra_merged[df_infra_merged["축제명"].str.contains(input.right_festival(), na=False)]
@@ -532,51 +580,7 @@ with ui.nav_panel("Map View"):
                 )
                 return fig
 
-    with ui.card():
-        ui.h5("주요 인프라 항목 수 비교", style="margin-top: 1rem;")
-        @render_plotly
-        def infra_compare_bar():
-            left = input.left_festival()
-            right = input.right_festival()
-            df = df_infra_merged.copy()
-            df = df[df["구분1"].isin(["숙소", "식당", "화장실", "주차장"])]
 
-            # 요약 데이터프레임 생성
-            summary = df[df["축제명"].str.contains(left, na=False)].groupby("구분1").size().reset_index(name=left)
-            summary2 = df[df["축제명"].str.contains(right, na=False)].groupby("구분1").size().reset_index(name=right)
-            merged = pd.merge(summary, summary2, on="구분1", how="outer").fillna(0)
-
-            df_plot = pd.melt(merged, id_vars="구분1", var_name="축제명", value_name="개수")
-
-            fig = px.bar(
-                df_plot,
-                x="구분1",
-                y="개수",
-                color="축제명",
-                barmode="group",
-                text="개수",  # ✅ 막대 위 텍스트 표시
-                color_discrete_sequence=px.colors.qualitative.Pastel
-            )
-
-            # ✅ 전체 레이아웃 조정 (폰트 크기 포함)
-            fig.update_traces(textposition="outside")
-            fig.update_layout(
-                height=450,
-                xaxis_title="인프라 유형",  # ✅ x축 제목 변경
-                font=dict(size=16),       # ✅ 전체 글자 크기 키우기
-                legend_title_font=dict(size=16),
-                xaxis=dict(tickfont=dict(size=14)),
-                yaxis=dict(tickfont=dict(size=14)),
-                margin=dict(l=40, r=40, t=40, b=40),
-                legend=dict(
-                    orientation="h",
-                    yanchor="bottom",
-                    y=1.05,
-                    xanchor="center",
-                    x=0.5
-                )
-            )
-            return fig
 
 
 
@@ -670,68 +674,7 @@ with ui.nav_panel("Stats View"):
                     return fig
 
 
-        # with ui.layout_columns(col_widths=(6, 6)):
-        #     # 카페 차트는 제거됨
-        #     with ui.card():
-        #         ui.h4("공영주차장 수")
-        #         @render_plotly
-        #         def 주차장차트():
-        #             # ✅ 주차장 데이터 필터링
-        #             df_주차 = df_stats[df_stats["구분1"] == "주차장"].copy()
-                
-        #             # ✅ 전체 축제명과 구분2 목록 추출
-        #             축제_목록 = df_stats["축제명"].dropna().unique()
-        #             구분2_목록 = df_주차["구분2"].dropna().unique()
-                
-        #             # ✅ 모든 축제 × 구분2 조합 생성
-        #             전체_조합 = pd.MultiIndex.from_product(
-        #                 [축제_목록, 구분2_목록],
-        #                 names=["축제명", "구분2"]
-        #             ).to_frame(index=False)
-                
-        #             # ✅ 실제 데이터 집계
-        #             count = df_주차.groupby(["축제명", "구분2"]).size().reset_index(name="수")
-                
-        #             # ✅ 누락된 조합에 대해 수 = 0 으로 채움
-        #             merged = pd.merge(전체_조합, count, on=["축제명", "구분2"], how="left").fillna(0)
-        #             merged["수"] = merged["수"].astype(int)
-                
-        #             selected = input.selected_festival()
-                
-        #             # ✅ 그래프 생성: 막대 위에 값 표시
-        #             fig = px.bar(
-        #                 merged,
-        #                 x="구분2",
-        #                 y="수",
-        #                 color="축제명",
-        #                 barmode="group",
-        #                 text="수",  # 막대 위 숫자 표시
-        #                 title="공영주차장 수 - 전체 축제 비교(축제위치 반경 1km이내 기준)",
-        #                 labels={"구분2": "주차장 유형", "수": "개수"},
-        #                 height=450,
-        #                 color_discrete_sequence = px.colors.qualitative.Pastel
-        #             );
-                
-        #             # ✅ 각 막대 위에 수치 표시 & 선택된 축제 강조
-        #             for trace in fig.data:
-        #                 trace.textposition = "outside"
-        #                 trace.marker.opacity = 1.0 if trace.name == selected else 0.2
-                
-        #             # ✅ x축 라벨 잘 보이게 설정
-        #             fig.update_layout(
-        #                 legend_title_text="축제명",
-        #                 showlegend=True,
-        #                 yaxis=dict(tick0=0, dtick=10),
-        #                 xaxis=dict(
-        #                     tickangle=0,
-        #                     automargin=True,
-        #                     tickfont=dict(size=12),
-        #                     title="주차장 유형"
-        #                 ),
-        #                 margin=dict(b=80)  # 하단 여백 확보
-        #             )
-                
-        #             return fig
+
                 
         with ui.layout_columns(col_widths=(6, 6)):
             # ✅ 왼쪽: 공중화장실 수 그래프
@@ -926,95 +869,5 @@ with ui.nav_panel("Stats View"):
                     </table>
                     """)
                     
-        # with ui.layout_columns(col_widths=(6,6)):
-        #     with ui.card():
-        #         ui.h4("인프라 수 vs 일일 방문객 수 비교")
-        #         df_bar_long["축제명"] = df_bar_long["축제명"].replace({
-        #             "작약꽃축제A": "작약꽃축제(A/B/C)",
-        #             "작약꽃축제B": "작약꽃축제(A/B/C)",
-        #             "작약꽃축제C": "작약꽃축제(A/B/C)"})
-                
-        #         df_info["축제명"] = df_info["축제명"].replace({
-        #             "작약꽃축제A": "작약꽃축제(A/B/C)",
-        #             "작약꽃축제B": "작약꽃축제(A/B/C)",    
-        #             "작약꽃축제C": "작약꽃축제(A/B/C)"})
 
-        #         # 필터: 영천 축제 선택 + 업소 유형 선택
-
-        #         축제_비교_목록 = ["작약꽃축제(A/B/C)", "와인페스타", "별빛축제"]
-        #         업소유형목록 = sorted(df_bar_long["업소유형"].unique())
-
-        #         ui.input_select("비교기준축제", "✔ 영천시 축제를 선택하세요", 축제_비교_목록, selected="작약꽃축제(A/B/C)")
-        #         ui.input_checkbox_group("비교업소유형", "✔ 업소 유형 선택", 업소유형목록, selected=업소유형목록)
-
-        #         @render_plotly
-        #         def infra_visitor_graph():
-        #             import plotly.graph_objects as go
-        #             import plotly.express as px
-
-        #             festival_pair = {
-        #                 "작약꽃축제(A/B/C)": ["작약꽃축제(A/B/C)", "옥정호 벚꽃축제"],
-        #                 "와인페스타": ["와인페스타", "오미자축제"],
-        #                 "별빛축제": ["별빛축제", "우주항공축제"]
-        #             }
-
-        #             선택축제 = input.비교기준축제()
-        #             선택업소유형 = input.비교업소유형()
-        #             비교축제들 = festival_pair[선택축제]
-
-        #             df_filtered = df_bar_long[
-        #                 (df_bar_long["축제명"].isin(비교축제들)) &
-        #                 (df_bar_long["업소유형"].isin(선택업소유형))
-        #             ]
-
-        #             fig = go.Figure()
-        #             color_list = px.colors.qualitative.Pastel
-
-        #             # ✅ 막대그래프 (왼쪽 y축)
-        #             for i, 유형 in enumerate(선택업소유형):
-        #                 df_sub = df_filtered[df_filtered["업소유형"] == 유형]
-        #                 fig.add_trace(go.Bar(
-        #                     x=df_sub["축제명"],
-        #                     y=df_sub["업소수"],
-        #                     name=유형,
-        #                     marker_color=color_list[i % len(color_list)],
-        #                     yaxis="y"  # 기본값이라 생략 가능
-        #                 ))
-
-        #             # ✅ 방문객 수 점 그래프 (오른쪽 y축)
-        #             visitor_dict = df_info.set_index("축제명")["일일방문객(명)"].to_dict()
-        #             visitor_raw = [visitor_dict.get(f, 0) for f in 비교축제들]
-
-        #             fig.add_trace(go.Scatter(
-        #                 x=비교축제들,
-        #                 y=visitor_raw,
-        #                 mode="markers+text",
-        #                 name="일일 방문객 수",
-        #                 text=[f"{v:,.0f}명" for v in visitor_raw],
-        #                 textposition="top center",
-        #                 marker=dict(size=12, color="black", symbol="diamond"),
-        #                 yaxis="y2"
-        #             ))
-        
-        #             # ✅ 이중 y축 설정
-        #             fig.update_layout(
-        #                 barmode="stack",
-        #                 title=f"{선택축제} vs 유사 축제: 인프라 + 방문객 수 비교",
-        #                 xaxis_title="축제명",
-        #                 yaxis=dict(
-        #                     title="숙소/식당 수",
-        #                     side="left"
-        #                 ),
-        #                 yaxis2=dict(
-        #                     title="일일 방문객 수 (명)",
-        #                     overlaying="y",
-        #                     side="right",
-        #                     range=[0, 40000],
-        #                     showgrid=False
-        #                 ),
-        #                 legend_title="항목",
-        #                 height=550
-        #             )
-        
-        #             return fig
         
