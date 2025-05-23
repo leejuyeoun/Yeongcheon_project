@@ -12,7 +12,7 @@ ui.page_opts(title="영천시 축제 인프라 분석", theme=theme.minty, filla
 # 데이터 로드
 from shared import df_info, df_compare, df_infra_summary, df_bar_long, df_infra_combined, df_stats, df_infra_merged
 
-# ✅ HTML 파일 매핑
+#  HTML 파일 매핑
 축제_파일_매핑 = {
     "작약꽃축제": "작약꽃축제_.html",
     "와인페스타": "와인페스타_.html",
@@ -23,7 +23,7 @@ from shared import df_info, df_compare, df_infra_summary, df_bar_long, df_infra_
 }
 
 
-# ✅ 표 1: 축제 기본정보 (작약꽃축제 통합 버전)
+#  표 1: 축제 기본정보 (작약꽃축제 통합 버전)
 df_info["일일 평균 방문객"] = (df_info["총방문객(명)"] / df_info["일수(일)"]).round(0)
 df_info_fixed = df_info.copy()
 df_info_fixed.loc[df_info_fixed["축제명"].isin(["작약꽃축제A", "작약꽃축제B", "작약꽃축제C"]), "축제명"] = "작약꽃축제(A/B/C)"
@@ -159,7 +159,7 @@ with ui.nav_panel("OverView"):
 
 
 with ui.nav_panel("Festival Compare"):
-    # ✅ 제목 + 버튼을 같은 줄에 배치
+    # 제목 + 버튼을 같은 줄에 배치
     with ui.layout_columns(col_widths=(5, 2, 2, 2)):  # 제목:5, 버튼3개
         ui.h4("유사 축제 인프라 비교", style="margin-top: 1rem; color: #444;")
 
@@ -167,7 +167,7 @@ with ui.nav_panel("Festival Compare"):
         ui.input_action_button("btn2", "와인 vs 오미자")
         ui.input_action_button("btn3", "별빛 vs 우주항공")
 
-        # 🌸 작약꽃 vs 벚꽃
+        #  작약꽃 vs 벚꽃
         @reactive.effect
         @reactive.event(input.btn1)
         def _():
@@ -215,7 +215,7 @@ with ui.nav_panel("Festival Compare"):
             ui.modal_show(m)
 
 
-        # 🍷 와인 vs 오미자
+        # 와인 vs 오미자
         @reactive.effect
         @reactive.event(input.btn2)
         def _():
@@ -262,7 +262,7 @@ with ui.nav_panel("Festival Compare"):
             )
             ui.modal_show(m)
 
-        # 🌌 별빛 vs 우주항공
+        # 별빛 vs 우주항공
         @reactive.effect
         @reactive.event(input.btn3)
         def _():
@@ -317,7 +317,7 @@ with ui.nav_panel("Festival Compare"):
         with ui.card():
             ui.h5("영천 축제 선택", style="color: #333;")
             ui.input_select("left_festival", "왼쪽 지도: 축제를 선택하세요", list(축제_파일_매핑.keys()), selected="작약꽃축제")
-        # 🔵 왼쪽 축제의 방문객 수 출력
+        # 왼쪽 축제의 방문객 수 출력
             @render.text
             def left_visitors():
                 # 작약꽃축제 A/B/C 통합 처리 포함
@@ -336,7 +336,7 @@ with ui.nav_panel("Festival Compare"):
         with ui.card():
             ui.h5("비교 축제 선택", style="color: #333;")
             ui.input_select("right_festival", "오른쪽 지도: 축제를 선택하세요", list(축제_파일_매핑.keys()), selected="벚꽃축제")
-            # 🔵 오른쪽쪽 축제의 방문객 수 출력
+            # 오른쪽쪽 축제의 방문객 수 출력
             @render.text
             def right_visitors():
                 # 작약꽃축제 A/B/C 통합 처리 포함
@@ -430,53 +430,61 @@ with ui.nav_panel("Festival Compare"):
 
     with ui.layout_columns(col_widths=(12,)):
         with ui.card():
-            ui.h5("주요 인프라 항목 수 비교", style="margin-top: 1rem;")
-            @render_plotly
-            def infra_compare_bar():
-                left = input.left_festival()
-                right = input.right_festival()
-                df = df_infra_merged.copy()
-                df = df[df["구분1"].isin(["숙소", "식당", "화장실", "주차장"])]
-    
-                # 요약 데이터프레임 생성
-                summary = df[df["축제명"].str.contains(left, na=False)].groupby("구분1").size().reset_index(name=left)
-                summary2 = df[df["축제명"].str.contains(right, na=False)].groupby("구분1").size().reset_index(name=right)
-                merged = pd.merge(summary, summary2, on="구분1", how="outer").fillna(0)
-    
-                df_plot = pd.melt(merged, id_vars="구분1", var_name="축제명", value_name="개수")
-    
-                fig = px.bar(
-                    df_plot,
-                    x="구분1",
-                    y="개수",
-                    color="축제명",
-                    barmode="group",
-                    text="개수",  # ✅ 막대 위 텍스트 표시
-                    color_discrete_sequence=px.colors.qualitative.Pastel
-                )
-    
-                # ✅ 전체 레이아웃 조정 (폰트 크기 포함)
-                fig.update_traces(textposition="outside")
-                fig.update_layout(
-                    height=450,
-                    xaxis_title="인프라 유형",  # ✅ x축 제목 변경
-                    font=dict(size=16),       # ✅ 전체 글자 크기 키우기
-                    legend_title_font=dict(size=16),
-                    xaxis=dict(tickfont=dict(size=14)),
-                    yaxis=dict(tickfont=dict(size=14)),
-                    margin=dict(l=40, r=40, t=40, b=40),
-                    legend=dict(
-                        orientation="h",
-                        yanchor="bottom",
-                        y=1.05,
-                        xanchor="center",
-                        x=0.5
+            ui.h5("주요 인프라 항목 수 비교", style="margin-top: 1rem; text-align: center;")  # 제목도 가운데 정렬
+
+            # 그래프를 가운데 정렬하기 위한 div 래퍼 추가
+            with ui.div(style="display: flex; justify-content: center;"):
+
+                @render_plotly
+                def infra_compare_bar():
+                    # ⬇ 데이터 준비
+                    left = input.left_festival()
+                    right = input.right_festival()
+                    df = df_infra_merged.copy()
+                    df = df[df["구분1"].isin(["숙소", "식당", "화장실", "주차장"])]
+
+                    summary = df[df["축제명"].str.contains(left, na=False)].groupby("구분1").size().reset_index(name=left)
+                    summary2 = df[df["축제명"].str.contains(right, na=False)].groupby("구분1").size().reset_index(name=right)
+                    merged = pd.merge(summary, summary2, on="구분1", how="outer").fillna(0)
+
+                    df_plot = pd.melt(merged, id_vars="구분1", var_name="축제명", value_name="개수")
+
+                    # ⬇ 그래프 생성
+                    fig = px.bar(
+                        df_plot,
+                        x="구분1",
+                        y="개수",
+                        color="축제명",
+                        barmode="group",
+                        text="개수",
+                        color_discrete_sequence=px.colors.qualitative.Pastel
                     )
-                )
-                return fig
+
+                    fig.update_traces(textposition="outside")
+
+                    fig.update_layout(
+                        height=450,
+                        width=960,  # 카드 너비에 맞춰 넓게
+                        bargap=0.2,
+                        xaxis_title="인프라 유형",
+                        font=dict(size=16),
+                        legend_title_font=dict(size=16),
+                        xaxis=dict(tickfont=dict(size=14)),
+                        yaxis=dict(tickfont=dict(size=14)),
+                        margin=dict(l=40, r=40, t=40, b=40),
+                        legend=dict(
+                            orientation="h",
+                            yanchor="bottom",
+                            y=1.05,
+                            xanchor="center",
+                            x=0.5
+                        )
+                    )
+
+                    return fig  # 반드시 fig 객체만 반환
         
     # 세부 유형 막대그래프
-    with ui.layout_columns(col_widths=[6, 6]):  # ✅ 카드 너비 균등 조절
+    with ui.layout_columns(col_widths=[6, 6]):  # 카드 너비 균등 조절
         with ui.card():
             ui.h5("영천 축제 인프라 세부 유형")
             @render_plotly
@@ -502,7 +510,7 @@ with ui.nav_panel("Festival Compare"):
                     height=470,
                     margin=dict(l=10, r=10, t=80, b=40),  # 하단 여백도 약간 여유
                     font=dict(size=16),
-                    xaxis_tickangle=-30,  # ✅ x축 라벨 겹침 방지
+                    xaxis_tickangle=-30,  # x축 라벨 겹침 방지
                     legend=dict(
                         orientation="h",
                         yanchor="bottom",
@@ -564,12 +572,12 @@ with ui.nav_panel("Festival Compare"):
 
 
 with ui.nav_panel("Festival Infra"):
-    # ✅ 데이터 로딩
+    # 데이터 로딩
     축제_목록 = sorted(df_stats["축제명"].dropna().unique().tolist())
     숙소_세부 = sorted(df_stats[df_stats["구분1"] == "숙소"]["구분2"].dropna().unique().tolist())
     식당_세부 = sorted(df_stats[df_stats["구분1"] == "식당"]["구분2"].dropna().unique().tolist())
 
-# ✅ 버튼 추가 (오른쪽 정렬)
+# 버튼 추가 (오른쪽 정렬)
     with ui.div(
         style="display: flex; justify-content: flex-end; margin: -0.3rem 0 0.5rem 0;"
     ):
@@ -584,7 +592,7 @@ with ui.nav_panel("Festival Infra"):
             )
         )
 
-    # ✅ 탭 이동 JS 코드 (Map View → Festival Compare로 변경)
+    # 탭 이동 JS 코드 (Map View → Festival Compare로 변경)
     ui.HTML("""
     <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -624,7 +632,7 @@ with ui.nav_panel("Festival Infra"):
     """)
 
 
-    # ✅ 사이드바 및 본문 레이아웃
+    # 사이드바 및 본문 레이아웃
     with ui.layout_sidebar():
         with ui.sidebar():
             ui.input_select(
@@ -652,6 +660,7 @@ with ui.nav_panel("Festival Infra"):
         with ui.layout_columns(col_widths=(6, 6)):
             with ui.card():
                 ui.h4("숙소 유형 분포")
+
                 @render_plotly
                 def 숙소차트():
                     df = df_stats[
@@ -661,20 +670,36 @@ with ui.nav_panel("Festival Infra"):
                     ]
                     count = df["구분2"].value_counts().reset_index()
                     count.columns = ["구분2", "수"]
-                    
-                    fig =px.pie(
-                        count if not count.empty else pd.DataFrame({'구분2' : ["없음"], "수" : [1]}),
-                        names = "구분2",
-                        values = "수",
+
+                    # 비율 계산
+                    if not count.empty:
+                        count["percent"] = (count["수"] / count["수"].sum() * 100).round(1)
+                        count["label"] = count["percent"].astype(str) + "% (" + count["수"].astype(str) + "개)"
+                    else:
+                        count = pd.DataFrame({'구분2': ["없음"], "수": [1], "label": ["없음"]})
+
+                    fig = px.pie(
+                        count,
+                        names="구분2",
+                        values="수",
                         title="어떤 유형의 숙소가 더 많을까?",
                         hole=0.4,
                         color_discrete_sequence=px.colors.qualitative.Pastel
                     );
-                    fig.update_traces(textinfo = "percent+label", textposition = 'outside', textfont_size = 15);
+
+                    fig.update_traces(
+                        text=count["label"],  # custom label 적용
+                        textinfo="text",
+                        textposition='outside',
+                        textfont_size=15
+                    )
+
                     return fig
+
                 
             with ui.card():
                 ui.h4("식당 종류 분포")
+
                 @render_plotly
                 def 식당차트():
                     df = df_stats[
@@ -684,26 +709,40 @@ with ui.nav_panel("Festival Infra"):
                     ]
                     count = df["구분2"].value_counts().reset_index()
                     count.columns = ["구분2", "수"]
-                    
+
                     selected = input.selected_festival()
                     text_size = 13 if selected == "와인페스타" else 15
 
+                    # 라벨 텍스트 생성: 비율 + 수 + "개"
+                    if not count.empty:
+                        count["percent"] = (count["수"] / count["수"].sum() * 100).round(1)
+                        count["label"] = count["percent"].astype(str) + "% (" + count["수"].astype(str) + "개)"
+                    else:
+                        count = pd.DataFrame({"구분2": ["없음"], "수": [1], "label": ["없음"]})
+
                     fig = px.pie(
-                        count if not count.empty else pd.DataFrame({"구분2":["없음"], "수":[1]}),
-                        names = "구분2",
-                        values = "수",
+                        count,
+                        names="구분2",
+                        values="수",
                         title="어떤 종류의 식당이 더 많을까?",
-                        hole = 0.4,
+                        hole=0.4,
                         color_discrete_sequence=px.colors.qualitative.Pastel
                     );
-                    fig.update_traces(textinfo = "percent+label", textposition = 'outside', textfont_size = text_size);
+
+                    fig.update_traces(
+                        text=count["label"],  # 커스텀 텍스트 적용
+                        textinfo="text",
+                        textposition="outside",
+                        textfont_size=text_size
+                    )
+
                     return fig
 
 
 
                 
         with ui.layout_columns(col_widths=(6, 6)):
-            # ✅ 왼쪽: 공중화장실 수 그래프
+            # 왼쪽: 공중화장실 수 그래프
             with ui.card():
                 ui.h4("공중화장실 수")
                 @render_plotly
@@ -755,7 +794,7 @@ with ui.nav_panel("Festival Infra"):
 
                     return fig
 
-            # ✅ 오른쪽: 공영주차장 수 그래프 (기존 코드 그대로)
+            # 오른쪽: 공영주차장 수 그래프 (기존 코드 그대로)
             with ui.card():
                 ui.h4("공영주차장 수")
                 @render_plotly
